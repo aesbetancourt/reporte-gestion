@@ -47,6 +47,19 @@ const Reports = () =>  {
         },
 
     ];
+    // Llenado de datos de prueba
+    const data = [];
+    for (let i = 0; i < 46; i++) {
+        data.push({
+            key: i,
+            name: `Colaborador ${i}`,
+            client: `Cliente ${i}`,
+            task: `Asignacion ${i}`,
+            pert: `pert ${i}`,
+            start:  `Inicio ${i}`,
+            end: `Fin ${i}`,
+        });
+    }
 
 
 
@@ -54,8 +67,9 @@ const Reports = () =>  {
         <div>
             <Table
                 columns={columns}
-                // dataSource={data}
+                dataSource={data}
                 bordered
+                pagination={false}
             />
         </div>
     )
