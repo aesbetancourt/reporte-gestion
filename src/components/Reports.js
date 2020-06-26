@@ -1,6 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import 'antd/dist/antd.css';
-import {Button, Space, Table, Divider} from 'antd';
+import { Table, Input, Button, Space } from 'antd';
+import Highlighter from 'react-highlight-words';
+import { SearchOutlined } from '@ant-design/icons';
 // import Swal from 'sweetalert2';
 
 
@@ -14,66 +16,129 @@ import {Button, Space, Table, Divider} from 'antd';
 //     })
 // });
 
+const data = [];
+for (let i = 0; i < 46; i++) {
+    data.push({
+        key: i,
+        name: `Colaborador ${i}`,
+        client: `Cliente ${i}`,
+        task: `Asignacion ${i}`,
+        pert: `pert ${i}`,
+        start:  `Inicio ${i}`,
+        end: `Fin ${i}`,
+    });
+}
 
+class Reports extends React.Component {
+  state = {
+    searchText: '',
+    searchedColumn: '',
+  };
 
+  getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={node => {
+            this.searchInput = node;
+          }}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => this.searchInput.select());
+      }
+    },
+    render: text =>
+      this.state.searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[this.state.searchText]}
+          autoEscape
+          textToHighlight={text.toString()}
+        />
+      ) : (
+        text
+      ),
+  });
 
+  handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    this.setState({
+      searchText: selectedKeys[0],
+      searchedColumn: dataIndex,
+    });
+  };
 
-const Reports = () =>  {
+  handleReset = clearFilters => {
+    clearFilters();
+    this.setState({ searchText: '' });
+  };
 
+  render() {
     const columns = [
-        {
-            title: 'Colaborador',
-            dataIndex: 'name',
-        },
-        {
-            title: 'Cliente',
-            dataIndex: 'client',
-        },
-        {
-            title: 'Asignación',
-            dataIndex: 'task',
-        },
-        {
-            title: 'Porcentaje',
-            dataIndex: 'pert'
-        },
-        {
-            title: 'Fecha Inicio',
-            dataIndex: 'start'
-        },
-        {
-            title: 'Fecha Fin',
-            dataIndex: 'end'
-        },
-
+      {
+        title: 'Colaborador',
+        dataIndex: 'name',
+        key: 'name',
+        ...this.getColumnSearchProps('name'),
+      },
+      {
+        title: 'Cliente',
+        dataIndex: 'client',
+        key: 'client',
+        ...this.getColumnSearchProps('client'),
+      },
+      {
+        title: 'Asignación',
+        dataIndex: 'Task',
+        key: 'Task',
+        ...this.getColumnSearchProps('Task'),
+      },
+      {
+          title: 'Porcentaje',
+          dataIndex: 'pert',
+          key: 'pert',
+          ...this.getColumnSearchProps('pert'),
+      },
+      {
+          title: 'Fecha Inicio',
+          dataIndex: 'start',
+          key: 'start',
+          ...this.getColumnSearchProps('start'),
+      },
+      {
+          title: 'Fecha Fin',
+          dataIndex: 'end',
+          key: 'end',
+          ...this.getColumnSearchProps('end'),
+      },
     ];
-    // Llenado de datos de prueba
-    const data = [];
-    for (let i = 0; i < 46; i++) {
-        data.push({
-            key: i,
-            name: `Colaborador ${i}`,
-            client: `Cliente ${i}`,
-            task: `Asignacion ${i}`,
-            pert: `pert ${i}`,
-            start:  `Inicio ${i}`,
-            end: `Fin ${i}`,
-        });
-    }
+    return <Table columns={columns} dataSource={data} pagination={false}/>;
+  }
+}
 
-
-
-    return(
-        <div>
-            <Table
-                columns={columns}
-                dataSource={data}
-                bordered
-                pagination={false}
-            />
-        </div>
-    )
-
-};
-
-export default Reports
+export default Reports;

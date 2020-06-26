@@ -63,6 +63,8 @@ class SiderDemo extends React.Component {
             margin: '24px 16px',
                 padding: 24,
                 minHeight: 280,
+                flex: 'none',
+
         }}
     >
         {this.state.selected === 1 ? <Reports /> : null}
