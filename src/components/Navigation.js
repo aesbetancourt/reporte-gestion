@@ -3,6 +3,7 @@ import { Layout, Menu, Typography } from 'antd';
 import 'antd/dist/antd.css';
 import './assets/css/navigation.css';
 import Reports from './Reports'
+import Selector from './Occupation'
 
 
 
@@ -12,7 +13,8 @@ import Reports from './Reports'
 import {
     FormOutlined,
     PieChartOutlined,
-    LogoutOutlined
+    LogoutOutlined,
+    ApartmentOutlined
 } from '@ant-design/icons';
 // import config from "../../config/config";
 // import https from 'https';
@@ -44,12 +46,15 @@ class SiderDemo extends React.Component {
             <Menu.Item key="1" icon={<PieChartOutlined />} onClick={() => this.setState({selected: 1})} className="customclass">
             Reporte
             </Menu.Item>
-            <Menu.Item key="4" icon={<FormOutlined />} onClick={() => this.setState({selected: 4})} className="customclass">
-            Ocupacion
+            <Menu.Item key="2" icon={<FormOutlined />} onClick={() => this.setState({selected: 2})} className="customclass">
+            Ocupación
             </Menu.Item>
-            <Menu.Item key="5" icon={<LogoutOutlined />} className="customclass" >
-        Salir
-        </Menu.Item>
+             <Menu.Item key="3" icon={<ApartmentOutlined />} onClick={() => this.setState({selected: 3})} className="customclass">
+                Integración
+             </Menu.Item>
+            <Menu.Item key="4" icon={<LogoutOutlined />} className="customclass" >
+                Salir
+            </Menu.Item>
         </Menu>
         </Sider>
         <Layout className="site-layout">
@@ -68,10 +73,7 @@ class SiderDemo extends React.Component {
         }}
     >
         {this.state.selected === 1 ? <Reports /> : null}
-        {/*{this.state.selected === 2 ? <Skills/> : null}*/}
-        {/*{this.state.selected === 3 ? <Categories/> : null}*/}
-        {/*{this.state.selected === 4 ? <Groups/> : null}*/}
-
+        {this.state.selected === 2 ? <Selector/> : null}
     </Content>
         </Layout>
         </Layout>

@@ -1,6 +1,6 @@
 import React from 'react';
 import 'antd/dist/antd.css';
-import { Select, Divider, Table, Space, Input,  Row, Col, Typography, DatePicker, InputNumber, Button } from 'antd';
+import { Select, Divider, Table, Space, Row, Col, Typography, DatePicker, InputNumber, Button } from 'antd';
 import {
     DeleteFilled,
     EditFilled
@@ -109,7 +109,7 @@ const Selector = () => {
             <Row style={{paddingTop: "5px", paddingBottom: "5px"}}>
                 <Col span={6}>
                     {/*Recurso*/}
-                    <Text style={{paddingRight: "10px"}}>Recurso 1</Text>
+                    <Text style={{paddingRight: "5px"}}>Recurso 1</Text>
                     <Select
                         showSearch
                         style={{ width: 200 }}
@@ -140,7 +140,7 @@ const Selector = () => {
             <Row style={{paddingTop: "5px", paddingBottom: "5px"}}>
                 <Col span={6}>
                     {/*Recurso*/}
-                    <Text style={{paddingRight: "10px"}}>Recurso 2</Text>
+                    <Text style={{paddingRight: "5px"}}>Recurso 2</Text>
                     <Select
                         showSearch
                         style={{ width: 200 }}
@@ -174,7 +174,7 @@ const Selector = () => {
             <Row style={{paddingTop: "5px", paddingBottom: "5px"}}>
                 <Col span={6}>
                     {/*Recurso*/}
-                    <Text style={{paddingRight: "10px"}}>Recurso 3</Text>
+                    <Text style={{paddingRight: "5px"}}>Recurso 3</Text>
                     <Select
                         showSearch
                         style={{ width: 200 }}
