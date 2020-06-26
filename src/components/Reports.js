@@ -35,14 +35,14 @@ class Reports extends React.Component {
     searchedColumn: '',
   };
 
-  getColumnSearchProps = dataIndex => ({
+  getColumnSearchProps = (dataIndex, name) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
         <Input
           ref={node => {
             this.searchInput = node;
           }}
-          placeholder={`Search ${dataIndex}`}
+          placeholder={`Buscar ${name}`}
           value={selectedKeys[0]}
           onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
@@ -56,10 +56,10 @@ class Reports extends React.Component {
             size="small"
             style={{ width: 90 }}
           >
-            Search
+            Buscar
           </Button>
           <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-            Reset
+            Reiniciar
           </Button>
         </Space>
       </div>
@@ -104,37 +104,35 @@ class Reports extends React.Component {
         title: 'Colaborador',
         dataIndex: 'name',
         key: 'name',
-        ...this.getColumnSearchProps('name'),
+        ...this.getColumnSearchProps('name','Colaborador'),
       },
       {
         title: 'Cliente',
         dataIndex: 'client',
         key: 'client',
-        ...this.getColumnSearchProps('client'),
+        ...this.getColumnSearchProps('client',"Cliente"),
       },
       {
         title: 'Asignación',
         dataIndex: 'Task',
         key: 'Task',
-        ...this.getColumnSearchProps('Task'),
+        ...this.getColumnSearchProps('Task',"Asignación"),
       },
       {
           title: 'Porcentaje',
           dataIndex: 'pert',
           key: 'pert',
-          ...this.getColumnSearchProps('pert'),
+          ...this.getColumnSearchProps('pert',"Porcentaje"),
       },
       {
           title: 'Fecha Inicio',
           dataIndex: 'start',
           key: 'start',
-          ...this.getColumnSearchProps('start'),
       },
       {
           title: 'Fecha Fin',
           dataIndex: 'end',
           key: 'end',
-          ...this.getColumnSearchProps('end'),
       },
     ];
     return <Table columns={columns} dataSource={data} pagination={false}/>;
