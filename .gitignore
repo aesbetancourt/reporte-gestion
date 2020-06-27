@@ -25,4 +25,4 @@ yarn-error.log*
 .idea/
 
 # index de react
-index.js
+/index.js
