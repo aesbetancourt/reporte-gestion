@@ -2,7 +2,9 @@
 /* eslint-disable import/first */
 import React, {Component} from "react";
 const axios = require('axios').default;
-
+const trelloToken = ""//Token de trello
+const trelloKey = ""//Key de trello
+const ClockifyToken ="" //Token de Clockify
 class Integration extends Component {
   constructor(props) {
     super(props);
@@ -32,7 +34,7 @@ class Integration extends Component {
     };
     getProjectID(name) {
         axios.defaults.baseURL = 'https://api.clockify.me/api/v1'
-        axios.defaults.headers.common['X-Api-Key'] = 'XvoZSd2jqzm2KrBB'
+        axios.defaults.headers.common['X-Api-Key'] = ClockifyToken
         axios.defaults.headers.common['content-type'] = 'application/json'
         /*recibe parametro name(nombre del proyecto) y client(nombre del cliente), busca en la lista de proyectos,
         devuelve el resultado filtrado y se retorna el ID en la funcion
@@ -48,7 +50,7 @@ class Integration extends Component {
     }
     getTaskID(name, projectId) {
         axios.defaults.baseURL = 'https://api.clockify.me/api/v1'
-        axios.defaults.headers.common['X-Api-Key'] = 'XvoZSd2jqzm2KrBB'
+        axios.defaults.headers.common['X-Api-Key'] = ClockifyToken
         axios.defaults.headers.common['content-type'] = 'application/json'
         /*recibe parametro name(nombre de la tarea) y projectId(ID del proyecto), busca en la lista de tareas dentro del proyecto,
         devuelve el resultado filtrado y se retorna el ID en la funcion
@@ -65,7 +67,7 @@ class Integration extends Component {
     getBoardID(name){
         let names = []; let ids= []; let index = 0;
         axios.defaults.baseURL = 'https://api.trello.com/1'
-        const add = '?key=734b31643e39e65cb0f8acee8396ef28&token=b9bf1f625d2eab26d1d5b1c7008dfbf556fe66a2a2230ee0bab6df9469c6df47'
+        const add = '?key='+trelloKey+'&token='+trelloToken
         return new Promise(async (resolve,reject) => {
             try {
                 let result = await axios.get(`/members/me/boards${add}`);
