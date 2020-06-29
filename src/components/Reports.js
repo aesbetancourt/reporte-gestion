@@ -3,37 +3,54 @@ import 'antd/dist/antd.css';
 import { Table, Input, Button, Space } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
+
+
 // import Swal from 'sweetalert2';
 
 
-// import config from "../../config/config";
-// import https from 'https';
-// const axios = require('axios').default;
-// axios.defaults.baseURL = config.backURL;
-// const axiosInstance = axios.create({
-//     httpsAgent: new https.Agent({
-//         rejectUnauthorized: false
-//     })
-// });
+import config from '../config/config'
+import https from 'https';
+const axios = require('axios').default;
+axios.defaults.baseURL = config.backURL;
+const axiosInstance = axios.create({
+    httpsAgent: new https.Agent({
+        rejectUnauthorized: false
+    })
+});
 
 const data = [];
-for (let i = 0; i < 46; i++) {
-    data.push({
-        key: i,
-        name: `Colaborador ${i}`,
-        client: `Cliente ${i}`,
-        task: `Asignacion ${i}`,
-        pert: `pert ${i}`,
-        start:  `Inicio ${i}`,
-        end: `Fin ${i}`,
+axiosInstance.get('/booking/booking')
+    .then(async function (response) {
+        console.log(response.data)
+        for (let i = 0; i < response.data.length; i++) {
+            data.push({
+                key: i,
+                name: response.data[i].usr_name,
+                client: response.data[i].cli_name,
+                task: response.data[i].req_id,
+                pert: response.data[i].boo_percentage,
+                start:  response.data[i].boo_start_date,
+                end: response.data[i].boo_end_date
+            });
+        }
+    })
+    .catch(function (error) {
+        // handle error
+        console.log(error);
+    })
+    .then(function () {
+        // always executed
+        console.log("Data successfully fetched")
+
     });
-}
+
+
 
 class Reports extends React.Component {
-  state = {
-    searchText: '',
-    searchedColumn: '',
-  };
+    state = {
+        searchText: '',
+        searchedColumn: '',
+    };
 
   getColumnSearchProps = (dataIndex, name) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -114,9 +131,9 @@ class Reports extends React.Component {
       },
       {
         title: 'Asignación',
-        dataIndex: 'Task',
+        dataIndex: 'task',
         key: 'Task',
-        ...this.getColumnSearchProps('Task',"Asignación"),
+        ...this.getColumnSearchProps('task',"Asignación"),
       },
       {
           title: 'Porcentaje',
