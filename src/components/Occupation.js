@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import 'antd/dist/antd.css';
 import { Select, Divider, Table, Space, Row, Col, Typography, DatePicker, InputNumber, Button } from 'antd';
 import {
@@ -6,24 +6,118 @@ import {
     EditFilled
 } from '@ant-design/icons';
 
+import config from '../config/config'
+import https from 'https';
 const { Option } = Select;
 const { Text } = Typography;
 const { RangePicker } = DatePicker;
 
 
+
+
+const axios = require('axios').default;
+axios.defaults.baseURL = config.backURL;
+const axiosInstance = axios.create({
+    httpsAgent: new https.Agent({
+        rejectUnauthorized: false
+    })
+});
+
+
+
+
+
 const children = [];
-for (let i = 10; i < 36; i++) {
-    children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
-}
+
 
 function handleChange(value) {
     console.log(`selected ${value}`);
 }
+let requests = [];
+let users = [];
+axiosInstance.get('/report/get_request')
+    .then(async function (response) {
+        console.log(response.data.length)
+        for (let i = 0; i < response.data.length; i++) {
+            requests.push(<Option key={response.data[i].req_id}>{response.data[i].req_title}</Option>);
+        }
+    })
+    .catch(function (error) {
+        // handle error
+        console.log(error);
+    })
+    .then(function () {
+        // always executed
+        console.log("Requests successfully fetched")
+
+    });
+
+
+axiosInstance.get('/report/get_user')
+    .then(async function (response) {
+        console.log(response.data.length)
+        for (let i = 0; i < response.data.length; i++) {
+            users.push(<Option key={response.data[i].usr_id}>{response.data[i].usr_name}</Option>);
+        }
+    })
+    .catch(function (error) {
+        // handle error
+        console.log(error);
+    })
+    .then(function () {
+        // always executed
+        console.log("Users successfully fetched")
+
+    });
+
+
+
 
 const Selector = () => {
+    const [data, setData] = useState([]);
 
+    // async function fillData(){
+    //     let info = await getRequests()
+    //     console.log(info)
+    //     setRequest(info)
+    //
+    // }
+    //
+    // useEffect(() => {
+    //     fillData()
+    // }, [])
     function onChange(value) {
         console.log(`selected ${value}`);
+    }
+    async function onChangeReq(value) {
+        let table = []
+        console.log(`selected ${value}`);
+        await axiosInstance.get(`/report/get_req/${value}`)
+            .then(async function (response) {
+                console.log(response.data)
+                for (let i = 0; i < response.data.length; i++) {
+                    console.log(response.data[i])
+                    await table.push({
+                        solicitud: response.data[i].req_name,
+                        resource: response.data[i].name,
+                        pert: response.data[i].boo_percentage,
+                        start: response.data[i].boo_start_date,
+                        end: response.data[i].boo_end_date
+                    });
+                }
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+            .then(function () {
+                // always executed
+                console.log("Table successfully fetched")
+                console.log(table)
+                setData(table)
+            });
+
+
     }
 
     function onBlur() {
@@ -46,11 +140,7 @@ const Selector = () => {
         },
         {
             title: 'Recurso',
-            dataIndex: 'Resource',
-        },
-        {
-            title: 'Grupo',
-            dataIndex: 'group_name',
+            dataIndex: 'resource',
         },
         {
             title: '%',
@@ -89,7 +179,7 @@ const Selector = () => {
                 style={{ width: 200 }}
                 placeholder="Seleccione una solicitud"
                 optionFilterProp="children"
-                onChange={onChange}
+                onChange={onChangeReq}
                 onFocus={onFocus}
                 onBlur={onBlur}
                 onSearch={onSearch}
@@ -97,12 +187,12 @@ const Selector = () => {
                     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
             >
-                {children}
+                {requests}
             </Select>
             <Divider/>
             <Table
                 columns={columns}
-                //dataSource={data}
+                dataSource={data}
                 bordered
             />
             <Divider/>
@@ -123,7 +213,7 @@ const Selector = () => {
                             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
                     >
-                        {children}
+                        {users}
                     </Select>
                 </Col>
                 <Col span={4}>
@@ -154,7 +244,7 @@ const Selector = () => {
                             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
                     >
-                        {children}
+                        {users}
                     </Select>
                 </Col>
                 <Col span={4}>
@@ -188,7 +278,7 @@ const Selector = () => {
                             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
                     >
-                        {children}
+                        {users}
                     </Select>
                 </Col>
                 <Col span={4}>
