@@ -4,6 +4,7 @@ import 'antd/dist/antd.css';
 import './assets/css/navigation.css';
 import Reports from './Reports'
 import Selector from './Occupation'
+import Integration from './integration'
 
 
 
@@ -74,6 +75,7 @@ class SiderDemo extends React.Component {
     >
         {this.state.selected === 1 ? <Reports /> : null}
         {this.state.selected === 2 ? <Selector/> : null}
+        {this.state.selected === 3 ? <Integration/> : null}
     </Content>
         </Layout>
         </Layout>
