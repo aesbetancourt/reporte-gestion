@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import 'antd/dist/antd.css';
 import { Table, Input, Button, Space } from 'antd';
 import Highlighter from 'react-highlight-words';
@@ -18,10 +18,26 @@ const axiosInstance = axios.create({
     })
 });
 
-const data = [];
+
+
+
+class Reports extends React.Component {
+
+    constructor(props) {
+      super(props);
+      this.state = {
+        searchText: '',
+        searchedColumn: '',
+        source:[]
+      };
+      this.charge = this.charge.bind(this)
+      this.charge();
+    };
+  charge(){
+    const data = [], obj = this;
 axiosInstance.get('/booking/booking')
     .then(async function (response) {
-        console.log(response.data)
+       // console.log(response.data)
         for (let i = 0; i < response.data.length; i++) {
             data.push({
                 key: i,
@@ -33,24 +49,18 @@ axiosInstance.get('/booking/booking')
                 end: response.data[i].boo_end_date
             });
         }
+        obj.setState({source: data})
     })
     .catch(function (error) {
         // handle error
-        console.log(error);
+       // console.log(error);
     })
     .then(function () {
         // always executed
-        console.log("Data successfully fetched")
+       // console.log("Data successfully fetched")
 
     });
-
-
-
-class Reports extends React.Component {
-    state = {
-        searchText: '',
-        searchedColumn: '',
-    };
+  }
 
   getColumnSearchProps = (dataIndex, name) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -152,7 +162,7 @@ class Reports extends React.Component {
           key: 'end',
       },
     ];
-    return <Table columns={columns} dataSource={data} pagination={false}/>;
+    return <Table columns={columns} dataSource={this.state.source} pagination={false}/>;
   }
 }
 
