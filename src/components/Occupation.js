@@ -70,7 +70,35 @@ axiosInstance.get('/report/get_user')
 
     });
 
-
+    // function updateTable(req_id){
+    //     let updatedTable = []
+    //     axiosInstance.get(`/report/get_req/${req_id}`)
+    //         .then(async function (response) {
+    //             console.log(response.data)
+    //             for (let i = 0; i < response.data.length; i++) {
+    //                 console.log(response.data[i])
+    //                 await updatedTable.push({
+    //                     solicitud: response.data[i].req_name,
+    //                     resource: response.data[i].name,
+    //                     pert: response.data[i].boo_percentage,
+    //                     start: response.data[i].boo_start_date,
+    //                     end: response.data[i].boo_end_date
+    //                 });
+    //             }
+    //
+    //         })
+    //         .catch(function (error) {
+    //             // handle error
+    //             console.log(error);
+    //         })
+    //         .then( function () {
+    //             // always executed
+    //             console.log("Table successfully fetched")
+    //             // console.log(table)
+    //
+    //         });
+    //   return updatedTable
+    // }
 
 
 const Selector = () => {
@@ -220,6 +248,31 @@ const Selector = () => {
                 .then(function () {
                     // always executed
                     console.log("this way, check this out")
+                    let updatedTable = []
+                    axiosInstance.get(`/report/get_req/${req_id}`)
+                        .then(async function (response) {
+                            console.log(response.data)
+                            for (let i = 0; i < response.data.length; i++) {
+                                console.log(response.data[i])
+                                await updatedTable.push({
+                                    solicitud: response.data[i].req_name,
+                                    resource: response.data[i].name,
+                                    pert: response.data[i].boo_percentage,
+                                    start: response.data[i].boo_start_date,
+                                    end: response.data[i].boo_end_date
+                                });
+                            }
+
+                        })
+                        .catch(function (error) {
+                            // handle error
+                            console.log(error);
+                        })
+                        .then( function () {
+                            // always executed
+                            console.log("Table successfully fetched")
+                            setData(updatedTable)
+                        });
 
                 });
         }
@@ -250,6 +303,31 @@ const Selector = () => {
                 .then(function () {
                     // always executed
                     console.log("this way, check this out")
+                    let updatedTable = []
+                    axiosInstance.get(`/report/get_req/${req_id}`)
+                        .then(async function (response) {
+                            console.log(response.data)
+                            for (let i = 0; i < response.data.length; i++) {
+                                console.log(response.data[i])
+                                await updatedTable.push({
+                                    solicitud: response.data[i].req_name,
+                                    resource: response.data[i].name,
+                                    pert: response.data[i].boo_percentage,
+                                    start: response.data[i].boo_start_date,
+                                    end: response.data[i].boo_end_date
+                                });
+                            }
+
+                        })
+                        .catch(function (error) {
+                            // handle error
+                            console.log(error);
+                        })
+                        .then( function () {
+                            // always executed
+                            console.log("Table successfully fetched")
+                            setData(updatedTable)
+                        });
 
                 });
         }
@@ -280,38 +358,37 @@ const Selector = () => {
                 .then(function () {
                     // always executed
                     console.log("this way, check this out")
+                    let updatedTable = []
+                    axiosInstance.get(`/report/get_req/${req_id}`)
+                        .then(async function (response) {
+                            console.log(response.data)
+                            for (let i = 0; i < response.data.length; i++) {
+                                console.log(response.data[i])
+                                await updatedTable.push({
+                                    solicitud: response.data[i].req_name,
+                                    resource: response.data[i].name,
+                                    pert: response.data[i].boo_percentage,
+                                    start: response.data[i].boo_start_date,
+                                    end: response.data[i].boo_end_date
+                                });
+                            }
+
+                        })
+                        .catch(function (error) {
+                            // handle error
+                            console.log(error);
+                        })
+                        .then( function () {
+                            // always executed
+                            console.log("Table successfully fetched")
+                            setData(updatedTable)
+                        });
 
                 });
         }
+        // await onChangeReq(req_id)
 
-        let updatedTable = []
-        await axiosInstance.get(`/report/get_req/${req_id}`)
-            .then(async function (response) {
-                console.log(response.data)
-                for (let i = 0; i < response.data.length; i++) {
-                    console.log(response.data[i])
-                    await updatedTable.push({
-                        solicitud: response.data[i].req_name,
-                        resource: response.data[i].name,
-                        pert: response.data[i].boo_percentage,
-                        start: response.data[i].boo_start_date,
-                        end: response.data[i].boo_end_date
-                    });
-                }
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            })
-            .then(function () {
-                setData(updatedTable)
-                // always executed
-                console.log("Table successfully fetched")
-                // console.log(table)
-
-            });
-
-
+        // setData(await updateTable(req_id))
 
     }
 
@@ -364,7 +441,6 @@ const Selector = () => {
             ),
         },
     ];
-
     return (
         <div>
             <Text style={{paddingRight: "10px"}}>Selección de Solicitud</Text>
