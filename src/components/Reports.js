@@ -43,7 +43,7 @@ axiosInstance.get('/booking/booking')
                 key: i,
                 name: response.data[i].usr_name,
                 client: response.data[i].cli_name,
-                task: response.data[i].req_id,
+                task: response.data[i].req_title,
                 pert: response.data[i].boo_percentage,
                 start:  response.data[i].boo_start_date,
                 end: response.data[i].boo_end_date
