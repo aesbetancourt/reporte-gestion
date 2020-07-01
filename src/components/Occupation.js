@@ -30,7 +30,7 @@ let req2 = {usr_id: "", start_date: "", end_date: "", pert: ""}
 let req3 = {usr_id: "", start_date: "", end_date: "", pert: ""}
 
 function handleChange(value) {
-    console.log(`selected ${value}`);
+    // console.log(`selected ${value}`);
 }
 
 // Selects
@@ -38,36 +38,36 @@ let requests = [];
 let users = [];
 axiosInstance.get('/report/get_request')
     .then(async function (response) {
-        console.log(response.data.length)
+        // console.log(response.data.length)
         for (let i = 0; i < response.data.length; i++) {
             requests.push(<Option key={response.data[i].req_id}>{response.data[i].req_title}</Option>);
         }
     })
     .catch(function (error) {
         // handle error
-        console.log(error);
+        // console.log(error);
     })
     .then(function () {
         // always executed
-        console.log("Requests successfully fetched")
+        // console.log("Requests successfully fetched")
 
     });
 
 
 axiosInstance.get('/report/get_user')
     .then(async function (response) {
-        console.log(response.data.length)
+        // console.log(response.data.length)
         for (let i = 0; i < response.data.length; i++) {
-            users.push(<Option key={response.data[i].usr_id}>{response.data[i].usr_name}</Option>);
+            users.push(<Option key={response.data[i].boo_id}>{response.data[i].usr_usr_name}</Option>);
         }
     })
     .catch(function (error) {
         // handle error
-        console.log(error);
+        // console.log(error);
     })
     .then(function () {
         // always executed
-        console.log("Users successfully fetched")
+        // console.log("Users successfully fetched")
 
     });
 
@@ -75,12 +75,13 @@ axiosInstance.get('/report/get_user')
 //     let updatedTable = []
 //     axiosInstance.get(`/report/get_req/${req_id}`)
 //         .then(async function (response) {
-//             console.log(response.data)
+//             // console.log(response.data)
 //             for (let i = 0; i < response.data.length; i++) {
-//                 console.log(response.data[i])
+//                 // console.log(response.data[i])
 //                 await updatedTable.push({
-//                     solicitud: response.data[i].req_name,
-//                     resource: response.data[i].name,
+//                     solicitud: response.data[i].req_title,
+//                     resource: response.data[i].usr_name,
+//                      usr_id: response.data[i].usr_id,
 //                     pert: response.data[i].boo_percentage,
 //                     start: response.data[i].boo_start_date,
 //                     end: response.data[i].boo_end_date
@@ -90,12 +91,12 @@ axiosInstance.get('/report/get_user')
 //         })
 //         .catch(function (error) {
 //             // handle error
-//             console.log(error);
+//             // console.log(error);
 //         })
 //         .then( function () {
 //             // always executed
-//             console.log("Table successfully fetched")
-//             // console.log(table)
+//             // console.log("Table successfully fetched")
+//             // // console.log(table)
 //
 //         });
 //   return updatedTable
@@ -111,7 +112,7 @@ const Selector = () => {
 
     // async function fillData(){
     //     let info = await getRequests()
-    //     console.log(info)
+    //     // console.log(info)
     //     setRequest(info)
     //
     // }
@@ -121,10 +122,12 @@ const Selector = () => {
     // }, [])
 
     function onChange(value) {
-        console.log(`selected ${value}`);
+    }
+    function editRecord(record){
+        console.log(record)
+       
     }
     function deleteRecord(record){
-        console.log(record)
         Swal.fire({
             title: "¿Quieres eliminar la solicitud "+record.solicitud+"?",
             text: "Una vez eliminado no se podra recuperar",
@@ -152,7 +155,6 @@ const Selector = () => {
     }
     async function onChangeReq(value) {
         let table = []
-        console.log(`selected ${value}`);
         setReqId(value)
         // setCliId()
         await axiosInstance.get(`/report/get_cli/${value}`)
@@ -161,7 +163,7 @@ const Selector = () => {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                // console.log(error);
             })
             .then(function () {
 
@@ -171,14 +173,16 @@ const Selector = () => {
 
         await axiosInstance.get(`/report/get_req/${value}`)
             .then(async function (response) {
-                // console.log(response.data)
+                // // console.log(response.data)
 
                 for (let i = 0; i < response.data.length; i++) {
-                    console.log(response.data[i])
+                    // console.log(response.data[i])
                     await table.push({
                         boo_id: response.data[i].boo_id,
-                        solicitud: response.data[i].req_name,
-                        resource: response.data[i].name,
+                        cli_id: response.data[i].cli_id,
+                        usr_id: response.data[i].usr_id,
+                        solicitud: response.data[i].req_title,
+                        resource: response.data[i].usr_usr_name,
                         pert: response.data[i].boo_percentage,
                         start: response.data[i].boo_start_date,
                         end: response.data[i].boo_end_date
@@ -187,12 +191,12 @@ const Selector = () => {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                // console.log(error);
             })
             .then(function () {
                 // always executed
-                console.log("Table successfully fetched")
-                // console.log(table)
+                // console.log("Table successfully fetched")
+                // // console.log(table)
                 setData(table)
             });
 
@@ -201,15 +205,15 @@ const Selector = () => {
 
     // Get the user id
     function onChangeUser1(value){
-        console.log(req1)
+        // console.log(req1)
         req1.usr_id = value
     }
     function onChangeUser2(value){
-        console.log(value)
+        // console.log(value)
         req2.usr_id = value
     }
     function onChangeUser3(value){
-        console.log(value)
+        // console.log(value)
         req3.usr_id = value
     }
 
@@ -259,11 +263,11 @@ const Selector = () => {
     }
 
     async function asignResources() {
-        console.log(req1)
-        console.log(req2)
-        console.log(req3)
-        console.log(cli_id)
-        console.log(req_id)
+        // console.log(req1)
+        // console.log(req2)
+        // console.log(req3)
+        // console.log(cli_id)
+        // console.log(req_id)
 
 
         // Create bookings 1
@@ -283,25 +287,28 @@ const Selector = () => {
                 cli_id: cli_id
             })
                 .then(response => {
-                    console.log(response)
+                    // console.log(response)
                 })
                 .catch(function (error) {
                     // handle error
-                    console.log(error);
+                    // console.log(error);
                 })
                 .then(function () {
                     // always executed
-                    console.log("this way, check this out")
+                    // console.log("this way, check this out")
                     let updatedTable = []
                     axiosInstance.get(`/report/get_req/${req_id}`)
                         .then(async function (response) {
-                            console.log(response.data)
+                            // console.log(response.data)
                             for (let i = 0; i < response.data.length; i++) {
-                                console.log(response.data[i])
+                                // console.log(response.data[i])
                                 await updatedTable.push({
                                     boo_id: response.data[i].boo_id,
-                                    solicitud: response.data[i].req_name,
-                                    resource: response.data[i].name,
+                                    cli_id: response.data[i].cli_id,
+                                    usr_id: response.data[i].usr_id,
+                                    solicitud: response.data[i].req_title,
+                                    resource: response.data[i].usr_name,
+                                    usr_id: response.data[i].usr_id,
                                     pert: response.data[i].boo_percentage,
                                     start: response.data[i].boo_start_date,
                                     end: response.data[i].boo_end_date
@@ -311,11 +318,11 @@ const Selector = () => {
                         })
                         .catch(function (error) {
                             // handle error
-                            console.log(error);
+                            // console.log(error);
                         })
                         .then( function () {
                             // always executed
-                            console.log("Table successfully fetched")
+                            // console.log("Table successfully fetched")
                             setData(updatedTable)
                         });
 
@@ -339,25 +346,28 @@ const Selector = () => {
                 cli_id: cli_id
             })
                 .then(response => {
-                    console.log(response)
+                    // console.log(response)
                 })
                 .catch(function (error) {
                     // handle error
-                    console.log(error);
+                    // console.log(error);
                 })
                 .then(function () {
                     // always executed
-                    console.log("this way, check this out")
+                    // console.log("this way, check this out")
                     let updatedTable = []
                     axiosInstance.get(`/report/get_req/${req_id}`)
                         .then(async function (response) {
-                            console.log(response.data)
+                            // console.log(response.data)
                             for (let i = 0; i < response.data.length; i++) {
-                                console.log(response.data[i])
+                                // console.log(response.data[i])
                                 await updatedTable.push({
                                     boo_id: response.data[i].boo_id,
-                                    solicitud: response.data[i].req_name,
-                                    resource: response.data[i].name,
+                                    cli_id: response.data[i].cli_id,
+                                    usr_id: response.data[i].usr_id,
+                                    solicitud: response.data[i].req_title,
+                                    resource: response.data[i].usr_name,
+                                    usr_id: response.data[i].usr_id,
                                     pert: response.data[i].boo_percentage,
                                     start: response.data[i].boo_start_date,
                                     end: response.data[i].boo_end_date
@@ -367,11 +377,11 @@ const Selector = () => {
                         })
                         .catch(function (error) {
                             // handle error
-                            console.log(error);
+                            // console.log(error);
                         })
                         .then( function () {
                             // always executed
-                            console.log("Table successfully fetched")
+                            // console.log("Table successfully fetched")
                             setData(updatedTable)
                         });
 
@@ -395,25 +405,28 @@ const Selector = () => {
                 cli_id: cli_id
             })
                 .then(response => {
-                    console.log(response)
+                    // console.log(response)
                 })
                 .catch(function (error) {
                     // handle error
-                    console.log(error);
+                    // console.log(error);
                 })
                 .then(function () {
                     // always executed
-                    console.log("this way, check this out")
+                    // console.log("this way, check this out")
                     let updatedTable = []
                     axiosInstance.get(`/report/get_req/${req_id}`)
                         .then(async function (response) {
-                            console.log(response.data)
+                            // console.log(response.data)
                             for (let i = 0; i < response.data.length; i++) {
-                                console.log(response.data[i])
+                                // console.log(response.data[i])
                                 await updatedTable.push({
                                     boo_id: response.data[i].boo_id,
-                                    solicitud: response.data[i].req_name,
-                                    resource: response.data[i].name,
+                                    cli_id: response.data[i].cli_id,
+                                    usr_id: response.data[i].usr_id,
+                                    solicitud: response.data[i].req_title,
+                                    resource: response.data[i].usr_name,
+                                    usr_id: response.data[i].usr_id,
                                     pert: response.data[i].boo_percentage,
                                     start: response.data[i].boo_start_date,
                                     end: response.data[i].boo_end_date
@@ -423,11 +436,11 @@ const Selector = () => {
                         })
                         .catch(function (error) {
                             // handle error
-                            console.log(error);
+                            // console.log(error);
                         })
                         .then( function () {
                             // always executed
-                            console.log("Table successfully fetched")
+                            // console.log("Table successfully fetched")
                             setData(updatedTable)
                         });
 
@@ -437,15 +450,15 @@ const Selector = () => {
 
 
     function onBlur() {
-        console.log('blur');
+        // console.log('blur');
     }
 
     function onFocus() {
-        console.log('focus');
+        // console.log('focus');
     }
 
     function onSearch(val) {
-        console.log('search:', val);
+        // console.log('search:', val);
     }
     const columns = [
         {
@@ -478,7 +491,7 @@ const Selector = () => {
                     {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                     <a><DeleteFilled  onClick={()=>deleteRecord(record)}/></a>
                     {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                    <a><EditFilled /></a>
+                    <a><EditFilled onClick={()=>editRecord(record)}/></a>
 
                 </Space>
             ),
