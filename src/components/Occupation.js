@@ -35,7 +35,7 @@ function handleChange(value) {
 
 // Selects
 let requests = [];
-let users = [];
+let users = [], usersGlobal=[];
 axiosInstance.get('/report/get_request')
     .then(async function (response) {
         // console.log(response.data.length)
@@ -58,7 +58,8 @@ axiosInstance.get('/report/get_user')
     .then(async function (response) {
         // console.log(response.data.length)
         for (let i = 0; i < response.data.length; i++) {
-            users.push(<Option key={response.data[i].boo_id}>{response.data[i].usr_usr_name}</Option>);
+            usersGlobal.push([response.data[i].usr_id,response.data[i].usr_name])
+            users.push(<Option key={response.data[i].boo_id}>{response.data[i].usr_name}</Option>);
         }
     })
     .catch(function (error) {
@@ -124,8 +125,50 @@ const Selector = () => {
     function onChange(value) {
     }
     function editRecord(record){
-        console.log(record)
-       
+        let selectUsers = [], selectedValues = []
+        for (let i = 0; i <  usersGlobal.length; i++) {
+            selectUsers.push(usersGlobal[i][1])
+            selectedValues.push(usersGlobal[i][0])
+        }
+        Swal.mixin({
+            input: 'text',
+            confirmButtonText: 'Siguiente &rarr;',
+            cancelButtonText: 'Cancelar',
+
+            showCancelButton: true,
+            progressSteps: ['1', '2','3']
+        }).queue([
+            {
+                title: 'Usuario',
+                text: 'Elija a cual usuario asignar',
+                input: 'select',
+                inputOptions: selectUsers,
+                inputValue: 0
+            },
+            {
+                title: 'Porcentaje',
+                text: 'Ingrese el porcentaje de ocupacion',
+                inputValue: record.pert
+            },
+            {
+                title: 'Porcentaje',
+                text: 'Ingrese el porcentaje de ocupacion',
+                input: 'date',
+            }
+            
+        ]).then((result) => {
+            if (result.value) {
+                const usr_id = selectedValues[result.value[0]],
+                    boo_percentage = result.value[1],
+                    boo_id = record.boo_id,
+                    cli_id = record.cli_id,
+                    boo_duration = null,
+                    boo_start_date = "",
+                    boo_end_date = "";
+
+                console.log({ boo_id, cli_id, req_id, usr_id, boo_duration, boo_start_date, boo_end_date, boo_percentage })
+            }
+        });
     }
     function deleteRecord(record){
         Swal.fire({
@@ -182,7 +225,7 @@ const Selector = () => {
                         cli_id: response.data[i].cli_id,
                         usr_id: response.data[i].usr_id,
                         solicitud: response.data[i].req_title,
-                        resource: response.data[i].usr_usr_name,
+                        resource: response.data[i].usr_name,
                         pert: response.data[i].boo_percentage,
                         start: response.data[i].boo_start_date,
                         end: response.data[i].boo_end_date
