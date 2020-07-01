@@ -4,7 +4,7 @@ import 'antd/dist/antd.css';
 import './assets/css/navigation.css';
 import Reports from './Reports'
 import Selector from './Occupation'
-import keycloak from './config/keycloak';
+import keycloak from '../config/keycloak';
 
 
 // Components
