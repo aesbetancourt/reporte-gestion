@@ -1,0 +1,10 @@
+{
+    apps : [
+      {
+        name      : "reporte-frontend",
+        script    : "npx",
+        interpreter: "none",
+        args: "npm start"
+      }
+    ]
+  }

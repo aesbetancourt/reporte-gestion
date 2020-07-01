@@ -1,3 +1,4 @@
+import Swal from 'sweetalert2'
 import React, {useEffect, useState} from 'react';
 import 'antd/dist/antd.css';
 import {Button, Col, DatePicker, Divider, InputNumber, Row, Select, Space, Table, Typography} from 'antd';
@@ -6,6 +7,7 @@ import moment from 'moment'
 
 import config from '../config/config'
 import https from 'https';
+import Reports from "./Reports";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -29,88 +31,91 @@ let req2 = {usr_id: "", start_date: "", end_date: "", pert: ""}
 let req3 = {usr_id: "", start_date: "", end_date: "", pert: ""}
 
 function handleChange(value) {
-    console.log(`selected ${value}`);
+    // console.log(`selected ${value}`);
 }
 
 // Selects
 let requests = [];
-let users = [];
+let users = [], usersGlobal=[];
 axiosInstance.get('/report/get_request')
     .then(async function (response) {
-        console.log(response.data.length)
+        // console.log(response.data.length)
         for (let i = 0; i < response.data.length; i++) {
             requests.push(<Option key={response.data[i].req_id}>{response.data[i].req_title}</Option>);
         }
     })
     .catch(function (error) {
         // handle error
-        console.log(error);
+        // console.log(error);
     })
     .then(function () {
         // always executed
-        console.log("Requests successfully fetched")
+        // console.log("Requests successfully fetched")
 
     });
 
 
 axiosInstance.get('/report/get_user')
     .then(async function (response) {
-        console.log(response.data.length)
+        // console.log(response.data.length)
         for (let i = 0; i < response.data.length; i++) {
+            usersGlobal.push([response.data[i].usr_id,response.data[i].usr_name])
             users.push(<Option key={response.data[i].usr_id}>{response.data[i].usr_name}</Option>);
         }
     })
     .catch(function (error) {
         // handle error
-        console.log(error);
+        // console.log(error);
     })
     .then(function () {
         // always executed
-        console.log("Users successfully fetched")
+        // console.log("Users successfully fetched")
 
     });
 
-    // function updateTable(req_id){
-    //     let updatedTable = []
-    //     axiosInstance.get(`/report/get_req/${req_id}`)
-    //         .then(async function (response) {
-    //             console.log(response.data)
-    //             for (let i = 0; i < response.data.length; i++) {
-    //                 console.log(response.data[i])
-    //                 await updatedTable.push({
-    //                     solicitud: response.data[i].req_name,
-    //                     resource: response.data[i].name,
-    //                     pert: response.data[i].boo_percentage,
-    //                     start: response.data[i].boo_start_date,
-    //                     end: response.data[i].boo_end_date
-    //                 });
-    //             }
-    //
-    //         })
-    //         .catch(function (error) {
-    //             // handle error
-    //             console.log(error);
-    //         })
-    //         .then( function () {
-    //             // always executed
-    //             console.log("Table successfully fetched")
-    //             // console.log(table)
-    //
-    //         });
-    //   return updatedTable
-    // }
+// function updateTable(req_id){
+//     let updatedTable = []
+//     axiosInstance.get(`/report/get_req/${req_id}`)
+//         .then(async function (response) {
+//             // console.log(response.data)
+//             for (let i = 0; i < response.data.length; i++) {
+//                 // console.log(response.data[i])
+//                 await updatedTable.push({
+//                     solicitud: response.data[i].req_title,
+//                     resource: response.data[i].usr_name,
+//                      usr_id: response.data[i].usr_id,
+//                     pert: response.data[i].boo_percentage,
+//                     start: response.data[i].boo_start_date,
+//                     end: response.data[i].boo_end_date
+//                 });
+//             }
+//
+//         })
+//         .catch(function (error) {
+//             // handle error
+//             // console.log(error);
+//         })
+//         .then( function () {
+//             // always executed
+//             // console.log("Table successfully fetched")
+//             // // console.log(table)
+//
+//         });
+//   return updatedTable
+// }
 
 
 const Selector = () => {
     const [data, setData] = useState([]);
     const [cli_id, setCliId] = useState("")
     const [req_id, setReqId] = useState("")
+    const [buttonState, setBState] = useState(false)
 
 
 
     // async function fillData(){
     //     let info = await getRequests()
-    //     console.log(info)
+    //     // console.log(info)
     //     setRequest(info)
     //
     // }
@@ -120,11 +125,108 @@ const Selector = () => {
     // }, [])
 
     function onChange(value) {
-        console.log(`selected ${value}`);
+    }
+    function editRecord(record){
+        let selectUsers = [], selectedValues = []
+        for (let i = 0; i <  usersGlobal.length; i++) {
+            selectUsers.push(usersGlobal[i][1])
+            selectedValues.push(usersGlobal[i][0])
+        }
+        Swal.mixin({
+            confirmButtonText: 'Siguiente &rarr;',
+            cancelButtonText: 'Cancelar',
+            showCancelButton: true,
+            progressSteps: ['1', '2','3','4']
+        }).queue([
+            {
+                title: 'Usuario',
+                text: 'Elija a cual usuario asignar',
+                input: 'select',
+                inputOptions: selectUsers,
+                inputValue: 0
+            },
+            {
+                title: 'Porcentaje',
+                text: 'Ingrese el porcentaje de ocupacion',
+                input: 'text',
+                inputValue: record.pert
+            },
+            {
+                title: 'Fecha de inicio',
+                html: '<input id="date" value="'+record.start.split('T')[0]+'" type="date">',
+                preConfirm: () => {
+                    const result = document.getElementById("date").value;
+                    return result;
+                }
+            },
+            {
+                title: 'Fecha de finalizacion',
+                html: '<input id="date2"  value="'+record.end.split('T')[0]+'"  type="date">',
+                preConfirm: () => {
+                    const result = document.getElementById("date2").value;
+                    return result;
+                }
+            }
+            
+        ]).then((result) => {
+            if (result.value) {
+                const usr_id = selectedValues[result.value[0]],
+                    boo_percentage = result.value[1],
+                    boo_id = record.boo_id,
+                    cli_id = record.cli_id,
+                    boo_duration = null,
+                    boo_start_date = result.value[2],
+                    boo_end_date = result.value[3];
+                 axiosInstance.post('/booking/booking',{
+                    //  boo_duration, boo_start_date, boo_end_date, boo_percentage
+                    boo_id: boo_id,
+                    cli_id: cli_id,
+                    boo_duration: boo_duration,
+                    req_id: req_id,
+                    usr_id: usr_id,
+                    boo_start_date: boo_start_date,
+                    boo_end_date: boo_end_date,
+                    boo_percentage: boo_percentage
+                })
+                    .then( (response) => {
+                        onChangeReq(req_id)
+                        Swal.fire({
+                            title:"El booking fue editado!",
+                            icon: "success",
+                        })
+                    });
+            }
+        });
+    }
+    function deleteRecord(record){
+        Swal.fire({
+            title: "¿Quieres eliminar la solicitud "+record.solicitud+"?",
+            text: "Una vez eliminado no se podra recuperar",
+            icon: "warning",
+            buttons: true,
+            showCancelButton: true,
+            confirmButtonText: 'Eliminar',
+            cancelButtonText: 'Cancelar',
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete.value) {
+                    axiosInstance.get('/booking/delete_booking/'+record.boo_id)
+                        .then( function (response) {
+                            onChangeReq(req_id)
+                            Swal.fire({
+                                title:"La solicitud fue eliminada!",
+                                icon: "success",
+                            })
+                        });
+                } else {
+                    Swal.fire("La solicitud no fue eliminada!");
+                }
+            });
     }
     async function onChangeReq(value) {
+        setBState(true)
         let table = []
-        console.log(`selected ${value}`);
         setReqId(value)
         // setCliId()
         await axiosInstance.get(`/report/get_cli/${value}`)
@@ -133,7 +235,7 @@ const Selector = () => {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                // console.log(error);
             })
             .then(function () {
 
@@ -143,27 +245,30 @@ const Selector = () => {
 
         await axiosInstance.get(`/report/get_req/${value}`)
             .then(async function (response) {
-                // console.log(response.data)
+                // // console.log(response.data)
 
                 for (let i = 0; i < response.data.length; i++) {
-                    console.log(response.data[i])
+                    // console.log(response.data[i])
                     await table.push({
-                        solicitud: response.data[i].req_name,
-                        resource: response.data[i].name,
+                        boo_id: response.data[i].boo_id,
+                        cli_id: response.data[i].cli_id,
+                        usr_id: response.data[i].usr_id,
+                        solicitud: response.data[i].req_title,
+                        resource: response.data[i].usr_name,
                         pert: response.data[i].boo_percentage,
-                        start: response.data[i].boo_start_date,
-                        end: response.data[i].boo_end_date
+                        start: response.data[i].boo_start_date.split("T")[0],
+                        end: response.data[i].boo_end_date.split("T")[0]
                     });
                 }
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                // console.log(error);
             })
             .then(function () {
                 // always executed
-                console.log("Table successfully fetched")
-                // console.log(table)
+                // console.log("Table successfully fetched")
+                // // console.log(table)
                 setData(table)
             });
 
@@ -172,15 +277,15 @@ const Selector = () => {
 
     // Get the user id
     function onChangeUser1(value){
-        console.log(req1)
+        // console.log(req1)
         req1.usr_id = value
     }
     function onChangeUser2(value){
-        console.log(value)
+        // console.log(value)
         req2.usr_id = value
     }
     function onChangeUser3(value){
-        console.log(value)
+        // console.log(value)
         req3.usr_id = value
     }
 
@@ -201,40 +306,51 @@ const Selector = () => {
 
     // get the date
     function date1(value){
-        let  start_dateObj = new Date(value[0]._d);
-        let  start_momentObj = moment(start_dateObj);
-        req1.start_date = start_momentObj.format('YYYY-MM-DD')
-
-        let  end_dateObj = new Date(value[1]._d);
-        let  end_momentObj = moment(end_dateObj);
-        req1.end_date = end_momentObj.format('YYYY-MM-DD');
-
+        if(value != null){
+            let  start_dateObj = new Date(value[0]._d);
+            let  start_momentObj = moment(start_dateObj);
+            req1.start_date = start_momentObj.format('YYYY-MM-DD')
+            let  end_dateObj = new Date(value[1]._d);
+            let  end_momentObj = moment(end_dateObj);
+            req1.end_date = end_momentObj.format('YYYY-MM-DD');
+        }else{
+            req1.start_date = "";
+            req1.end_date = "";
+        }
     }
     function date2(value){
-        let  start_dateObj = new Date(value[0]._d);
-        let  start_momentObj = moment(start_dateObj);
-        req2.start_date = start_momentObj.format('YYYY-MM-DD')
-
-        let  end_dateObj = new Date(value[1]._d);
-        let  end_momentObj = moment(end_dateObj);
-        req2.end_date = end_momentObj.format('YYYY-MM-DD');
+        if(value != null){
+            let  start_dateObj = new Date(value[0]._d);
+            let  start_momentObj = moment(start_dateObj);
+            req2.start_date = start_momentObj.format('YYYY-MM-DD')
+            let  end_dateObj = new Date(value[1]._d);
+            let  end_momentObj = moment(end_dateObj);
+            req2.end_date = end_momentObj.format('YYYY-MM-DD');
+        }else{
+            req2.start_date = "";
+            req2.end_date = "";
+        }
     }
     function date3(value) {
-        let  start_dateObj = new Date(value[0]._d);
-        let  start_momentObj = moment(start_dateObj);
-        req3.start_date = start_momentObj.format('YYYY-MM-DD')
-
-        let  end_dateObj = new Date(value[1]._d);
-        let  end_momentObj = moment(end_dateObj);
-        req3.end_date = end_momentObj.format('YYYY-MM-DD');
+        if(value != null){
+            let  start_dateObj = new Date(value[0]._d);
+            let  start_momentObj = moment(start_dateObj);
+            req3.start_date = start_momentObj.format('YYYY-MM-DD')
+            let  end_dateObj = new Date(value[1]._d);
+            let  end_momentObj = moment(end_dateObj);
+            req3.end_date = end_momentObj.format('YYYY-MM-DD');
+        }else{
+            req3.start_date = "";
+            req3.end_date = "";
+        }
     }
 
     async function asignResources() {
-        console.log(req1)
-        console.log(req2)
-        console.log(req3)
-        console.log(cli_id)
-        console.log(req_id)
+        // console.log(req1)
+        // console.log(req2)
+        // console.log(req3)
+        // console.log(cli_id)
+        // console.log(req_id)
 
 
         // Create bookings 1
@@ -254,38 +370,41 @@ const Selector = () => {
                 cli_id: cli_id
             })
                 .then(response => {
-                    console.log(response)
+                    // console.log(response)
                 })
                 .catch(function (error) {
                     // handle error
-                    console.log(error);
+                    // console.log(error);
                 })
                 .then(function () {
                     // always executed
-                    console.log("this way, check this out")
+                    // console.log("this way, check this out")
                     let updatedTable = []
                     axiosInstance.get(`/report/get_req/${req_id}`)
                         .then(async function (response) {
                             console.log(response.data)
                             for (let i = 0; i < response.data.length; i++) {
-                                console.log(response.data[i])
+                                // console.log(response.data[i])
                                 await updatedTable.push({
-                                    solicitud: response.data[i].req_name,
-                                    resource: response.data[i].name,
+                                    boo_id: response.data[i].boo_id,
+                                    cli_id: response.data[i].cli_id,
+                                    usr_id: response.data[i].usr_id,
+                                    solicitud: response.data[i].req_title,
+                                    resource: response.data[i].usr_name,
                                     pert: response.data[i].boo_percentage,
-                                    start: response.data[i].boo_start_date,
-                                    end: response.data[i].boo_end_date
+                                    start: response.data[i].boo_start_date.split("T")[0],
+                                    end: response.data[i].boo_end_date.split("T")[0]
                                 });
                             }
 
                         })
                         .catch(function (error) {
                             // handle error
-                            console.log(error);
+                            // console.log(error);
                         })
                         .then( function () {
                             // always executed
-                            console.log("Table successfully fetched")
+                            // console.log("Table successfully fetched")
                             setData(updatedTable)
                         });
 
@@ -309,38 +428,41 @@ const Selector = () => {
                 cli_id: cli_id
             })
                 .then(response => {
-                    console.log(response)
+                    // console.log(response)
                 })
                 .catch(function (error) {
                     // handle error
-                    console.log(error);
+                    // console.log(error);
                 })
                 .then(function () {
                     // always executed
-                    console.log("this way, check this out")
+                    // console.log("this way, check this out")
                     let updatedTable = []
                     axiosInstance.get(`/report/get_req/${req_id}`)
                         .then(async function (response) {
-                            console.log(response.data)
+                            // console.log(response.data)
                             for (let i = 0; i < response.data.length; i++) {
-                                console.log(response.data[i])
+                                // console.log(response.data[i])
                                 await updatedTable.push({
-                                    solicitud: response.data[i].req_name,
-                                    resource: response.data[i].name,
+                                    boo_id: response.data[i].boo_id,
+                                    cli_id: response.data[i].cli_id,
+                                    usr_id: response.data[i].usr_id,
+                                    solicitud: response.data[i].req_title,
+                                    resource: response.data[i].usr_name,
                                     pert: response.data[i].boo_percentage,
-                                    start: response.data[i].boo_start_date,
-                                    end: response.data[i].boo_end_date
+                                    start: response.data[i].boo_start_date.split("T")[0],
+                                    end: response.data[i].boo_end_date.split("T")[0]
                                 });
                             }
 
                         })
                         .catch(function (error) {
                             // handle error
-                            console.log(error);
+                            // console.log(error);
                         })
                         .then( function () {
                             // always executed
-                            console.log("Table successfully fetched")
+                            // console.log("Table successfully fetched")
                             setData(updatedTable)
                         });
 
@@ -364,57 +486,63 @@ const Selector = () => {
                 cli_id: cli_id
             })
                 .then(response => {
-                    console.log(response)
+                    // console.log(response)
                 })
                 .catch(function (error) {
                     // handle error
-                    console.log(error);
+                    // console.log(error);
                 })
                 .then(function () {
                     // always executed
-                    console.log("this way, check this out")
+                    // console.log("this way, check this out")
                     let updatedTable = []
                     axiosInstance.get(`/report/get_req/${req_id}`)
                         .then(async function (response) {
-                            console.log(response.data)
+                            // console.log(response.data)
                             for (let i = 0; i < response.data.length; i++) {
-                                console.log(response.data[i])
+                                // console.log(response.data[i])
                                 await updatedTable.push({
-                                    solicitud: response.data[i].req_name,
-                                    resource: response.data[i].name,
+                                    boo_id: response.data[i].boo_id,
+                                    cli_id: response.data[i].cli_id,
+                                    usr_id: response.data[i].usr_id,
+                                    solicitud: response.data[i].req_title,
+                                    resource: response.data[i].usr_name,
                                     pert: response.data[i].boo_percentage,
-                                    start: response.data[i].boo_start_date,
-                                    end: response.data[i].boo_end_date
+                                    start: response.data[i].boo_start_date.split("T")[0],
+                                    end: response.data[i].boo_end_date.split("T")[0]
                                 });
                             }
 
                         })
                         .catch(function (error) {
                             // handle error
-                            console.log(error);
+                            // console.log(error);
                         })
                         .then( function () {
                             // always executed
-                            console.log("Table successfully fetched")
+                            // console.log("Table successfully fetched")
                             setData(updatedTable)
                         });
 
                 });
         }
+        req1 = {usr_id: "", start_date: "", end_date: "", pert: ""}
+        req2 = {usr_id: "", start_date: "", end_date: "", pert: ""}
+        req3 = {usr_id: "", start_date: "", end_date: "", pert: ""}
     }
 
 
-        function onBlur() {
-            console.log('blur');
-        }
+    function onBlur() {
+        // console.log('blur');
+    }
 
-        function onFocus() {
-            console.log('focus');
-        }
+    function onFocus() {
+        // console.log('focus');
+    }
 
-        function onSearch(val) {
-            console.log('search:', val);
-        }
+    function onSearch(val) {
+        // console.log('search:', val);
+    }
     const columns = [
         {
             title: 'Solicitud',
@@ -444,9 +572,9 @@ const Selector = () => {
             render: (text, record) => (
                 <Space size="small">
                     {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                    <a><DeleteFilled /></a>
+                    <a><DeleteFilled  onClick={()=>deleteRecord(record)}/></a>
                     {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                    <a><EditFilled /></a>
+                    <a><EditFilled onClick={()=>editRecord(record)}/></a>
 
                 </Space>
             ),
@@ -541,7 +669,11 @@ const Selector = () => {
                     <RangePicker onChange={date2}/>
                 </Col>
                 <Col span={4}>
-                    <Button type="primary" style={{ backgroundColor: "#08979c", borderColor: "#08979c" }} onClick={asignResources}> Asignar recursos</Button>
+                    {buttonState === false ?
+                        <Button type="primary" style={{ backgroundColor: "#08979c", borderColor: "#08979c" }} onClick={asignResources} disabled> Asignar recursos</Button>
+                        :
+                        <Button type="primary" style={{ backgroundColor: "#08979c", borderColor: "#08979c" }} onClick={asignResources}> Asignar recursos</Button>
+                    }
                 </Col>
             </Row >
             <Row style={{paddingTop: "5px", paddingBottom: "5px"}}>
