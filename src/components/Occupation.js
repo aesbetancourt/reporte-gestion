@@ -1,3 +1,4 @@
+import Swal from 'sweetalert2'
 import React, {useEffect, useState} from 'react';
 import 'antd/dist/antd.css';
 import {Button, Col, DatePicker, Divider, InputNumber, Row, Select, Space, Table, Typography} from 'antd';
@@ -70,35 +71,35 @@ axiosInstance.get('/report/get_user')
 
     });
 
-    // function updateTable(req_id){
-    //     let updatedTable = []
-    //     axiosInstance.get(`/report/get_req/${req_id}`)
-    //         .then(async function (response) {
-    //             console.log(response.data)
-    //             for (let i = 0; i < response.data.length; i++) {
-    //                 console.log(response.data[i])
-    //                 await updatedTable.push({
-    //                     solicitud: response.data[i].req_name,
-    //                     resource: response.data[i].name,
-    //                     pert: response.data[i].boo_percentage,
-    //                     start: response.data[i].boo_start_date,
-    //                     end: response.data[i].boo_end_date
-    //                 });
-    //             }
-    //
-    //         })
-    //         .catch(function (error) {
-    //             // handle error
-    //             console.log(error);
-    //         })
-    //         .then( function () {
-    //             // always executed
-    //             console.log("Table successfully fetched")
-    //             // console.log(table)
-    //
-    //         });
-    //   return updatedTable
-    // }
+// function updateTable(req_id){
+//     let updatedTable = []
+//     axiosInstance.get(`/report/get_req/${req_id}`)
+//         .then(async function (response) {
+//             console.log(response.data)
+//             for (let i = 0; i < response.data.length; i++) {
+//                 console.log(response.data[i])
+//                 await updatedTable.push({
+//                     solicitud: response.data[i].req_name,
+//                     resource: response.data[i].name,
+//                     pert: response.data[i].boo_percentage,
+//                     start: response.data[i].boo_start_date,
+//                     end: response.data[i].boo_end_date
+//                 });
+//             }
+//
+//         })
+//         .catch(function (error) {
+//             // handle error
+//             console.log(error);
+//         })
+//         .then( function () {
+//             // always executed
+//             console.log("Table successfully fetched")
+//             // console.log(table)
+//
+//         });
+//   return updatedTable
+// }
 
 
 const Selector = () => {
@@ -121,6 +122,33 @@ const Selector = () => {
 
     function onChange(value) {
         console.log(`selected ${value}`);
+    }
+    function deleteRecord(record){
+        console.log(record)
+        Swal.fire({
+            title: "¿Quieres eliminar la solicitud "+record.solicitud+"?",
+            text: "Una vez eliminado no se podra recuperar",
+            icon: "warning",
+            buttons: true,
+            showCancelButton: true,
+            confirmButtonText: 'Eliminar',
+            cancelButtonText: 'Cancelar',
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete.value) {
+                    axiosInstance.delete('/'+record.boo_id)
+                        .then( function (response) {
+                            onChangeReq(req_id)
+                            Swal.fire({
+                                title:"La solicitud fue eliminada!",
+                                icon: "success",
+                            })
+                        });
+                } else {
+                    Swal.fire("La solicitud no fue eliminada!");
+                }
+            });
     }
     async function onChangeReq(value) {
         let table = []
@@ -148,6 +176,7 @@ const Selector = () => {
                 for (let i = 0; i < response.data.length; i++) {
                     console.log(response.data[i])
                     await table.push({
+                        boo_id: response.data[i].boo_id,
                         solicitud: response.data[i].req_name,
                         resource: response.data[i].name,
                         pert: response.data[i].boo_percentage,
@@ -270,6 +299,7 @@ const Selector = () => {
                             for (let i = 0; i < response.data.length; i++) {
                                 console.log(response.data[i])
                                 await updatedTable.push({
+                                    boo_id: response.data[i].boo_id,
                                     solicitud: response.data[i].req_name,
                                     resource: response.data[i].name,
                                     pert: response.data[i].boo_percentage,
@@ -325,6 +355,7 @@ const Selector = () => {
                             for (let i = 0; i < response.data.length; i++) {
                                 console.log(response.data[i])
                                 await updatedTable.push({
+                                    boo_id: response.data[i].boo_id,
                                     solicitud: response.data[i].req_name,
                                     resource: response.data[i].name,
                                     pert: response.data[i].boo_percentage,
@@ -380,6 +411,7 @@ const Selector = () => {
                             for (let i = 0; i < response.data.length; i++) {
                                 console.log(response.data[i])
                                 await updatedTable.push({
+                                    boo_id: response.data[i].boo_id,
                                     solicitud: response.data[i].req_name,
                                     resource: response.data[i].name,
                                     pert: response.data[i].boo_percentage,
@@ -404,17 +436,17 @@ const Selector = () => {
     }
 
 
-        function onBlur() {
-            console.log('blur');
-        }
+    function onBlur() {
+        console.log('blur');
+    }
 
-        function onFocus() {
-            console.log('focus');
-        }
+    function onFocus() {
+        console.log('focus');
+    }
 
-        function onSearch(val) {
-            console.log('search:', val);
-        }
+    function onSearch(val) {
+        console.log('search:', val);
+    }
     const columns = [
         {
             title: 'Solicitud',
@@ -444,7 +476,7 @@ const Selector = () => {
             render: (text, record) => (
                 <Space size="small">
                     {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                    <a><DeleteFilled /></a>
+                    <a><DeleteFilled  onClick={()=>deleteRecord(record)}/></a>
                     {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                     <a><EditFilled /></a>
 
