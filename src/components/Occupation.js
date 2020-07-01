@@ -59,7 +59,7 @@ axiosInstance.get('/report/get_user')
         // console.log(response.data.length)
         for (let i = 0; i < response.data.length; i++) {
             usersGlobal.push([response.data[i].usr_id,response.data[i].usr_name])
-            users.push(<Option key={response.data[i].boo_id}>{response.data[i].usr_name}</Option>);
+            users.push(<Option key={response.data[i].usr_id}>{response.data[i].usr_name}</Option>);
         }
     })
     .catch(function (error) {
@@ -131,12 +131,10 @@ const Selector = () => {
             selectedValues.push(usersGlobal[i][0])
         }
         Swal.mixin({
-            input: 'text',
             confirmButtonText: 'Siguiente &rarr;',
             cancelButtonText: 'Cancelar',
-
             showCancelButton: true,
-            progressSteps: ['1', '2','3', '4']
+            progressSteps: ['1', '2','3','4']
         }).queue([
             {
                 title: 'Usuario',
@@ -147,23 +145,29 @@ const Selector = () => {
             },
             {
                 title: 'Porcentaje',
-                text: 'Ingrese el porcentaje de ocupación',
+                text: 'Ingrese el porcentaje de ocupacion',
+                input: 'text',
                 inputValue: record.pert
             },
             {
-                title: 'Fecha de Inicio',
-                text: 'Ingrese la fecha (YYYY-MM-DD)',
-                input: 'text',
+                title: 'Dia de inicio',
+                html: '<input id="date" type="date">',
+                preConfirm: () => {
+                    const result = document.getElementById("date").value;
+                    return result;
+                }
             },
             {
-                title: 'Fecha de Fin',
-                text: 'Ingrese la fecha (YYYY-MM-DD)',
-                input: 'text',
+                title: 'Dia de finalizacion',
+                html: '<input id="date2" type="date">',
+                preConfirm: () => {
+                    const result = document.getElementById("date2").value;
+                    return result;
+                }
             }
             
         ]).then((result) => {
             if (result.value) {
-                console.log(result.value)
                 const usr_id = selectedValues[result.value[0]],
                     boo_percentage = result.value[1],
                     boo_id = record.boo_id,
@@ -171,9 +175,8 @@ const Selector = () => {
                     boo_duration = null,
                     boo_start_date = result.value[2],
                     boo_end_date = result.value[3];
-
                 console.log({ boo_id, cli_id, req_id, usr_id, boo_duration, boo_start_date, boo_end_date, boo_percentage })
-                axiosInstance.post('/booking/booking',{
+                 axiosInstance.post('/booking/booking',{
                     //  boo_duration, boo_start_date, boo_end_date, boo_percentage
                     boo_id: boo_id,
                     cli_id: cli_id,
