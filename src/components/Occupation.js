@@ -7,6 +7,7 @@ import moment from 'moment'
 
 import config from '../config/config'
 import https from 'https';
+import Reports from "./Reports";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -108,6 +109,7 @@ const Selector = () => {
     const [data, setData] = useState([]);
     const [cli_id, setCliId] = useState("")
     const [req_id, setReqId] = useState("")
+    const [buttonState, setBState] = useState(false)
 
 
 
@@ -223,6 +225,7 @@ const Selector = () => {
             });
     }
     async function onChangeReq(value) {
+        setBState(true)
         let table = []
         setReqId(value)
         // setCliId()
@@ -253,8 +256,8 @@ const Selector = () => {
                         solicitud: response.data[i].req_title,
                         resource: response.data[i].usr_name,
                         pert: response.data[i].boo_percentage,
-                        start: response.data[i].boo_start_date,
-                        end: response.data[i].boo_end_date
+                        start: response.data[i].boo_start_date.split("T")[0],
+                        end: response.data[i].boo_end_date.split("T")[0]
                     });
                 }
             })
@@ -368,7 +371,7 @@ const Selector = () => {
                     let updatedTable = []
                     axiosInstance.get(`/report/get_req/${req_id}`)
                         .then(async function (response) {
-                            // console.log(response.data)
+                            console.log(response.data)
                             for (let i = 0; i < response.data.length; i++) {
                                 // console.log(response.data[i])
                                 await updatedTable.push({
@@ -378,8 +381,8 @@ const Selector = () => {
                                     solicitud: response.data[i].req_title,
                                     resource: response.data[i].usr_name,
                                     pert: response.data[i].boo_percentage,
-                                    start: response.data[i].boo_start_date,
-                                    end: response.data[i].boo_end_date
+                                    start: response.data[i].boo_start_date.split("T")[0],
+                                    end: response.data[i].boo_end_date.split("T")[0]
                                 });
                             }
 
@@ -436,8 +439,8 @@ const Selector = () => {
                                     solicitud: response.data[i].req_title,
                                     resource: response.data[i].usr_name,
                                     pert: response.data[i].boo_percentage,
-                                    start: response.data[i].boo_start_date,
-                                    end: response.data[i].boo_end_date
+                                    start: response.data[i].boo_start_date.split("T")[0],
+                                    end: response.data[i].boo_end_date.split("T")[0]
                                 });
                             }
 
@@ -494,8 +497,8 @@ const Selector = () => {
                                     solicitud: response.data[i].req_title,
                                     resource: response.data[i].usr_name,
                                     pert: response.data[i].boo_percentage,
-                                    start: response.data[i].boo_start_date,
-                                    end: response.data[i].boo_end_date
+                                    start: response.data[i].boo_start_date.split("T")[0],
+                                    end: response.data[i].boo_end_date.split("T")[0]
                                 });
                             }
 
@@ -512,6 +515,9 @@ const Selector = () => {
 
                 });
         }
+        req1 = {usr_id: "", start_date: "", end_date: "", pert: ""}
+        req2 = {usr_id: "", start_date: "", end_date: "", pert: ""}
+        req3 = {usr_id: "", start_date: "", end_date: "", pert: ""}
     }
 
 
@@ -652,7 +658,11 @@ const Selector = () => {
                     <RangePicker onChange={date2}/>
                 </Col>
                 <Col span={4}>
-                    <Button type="primary" style={{ backgroundColor: "#08979c", borderColor: "#08979c" }} onClick={asignResources}> Asignar recursos</Button>
+                    {buttonState === false ?
+                        <Button type="primary" style={{ backgroundColor: "#08979c", borderColor: "#08979c" }} onClick={asignResources} disabled> Asignar recursos</Button>
+                        :
+                        <Button type="primary" style={{ backgroundColor: "#08979c", borderColor: "#08979c" }} onClick={asignResources}> Asignar recursos</Button>
+                    }
                 </Col>
             </Row >
             <Row style={{paddingTop: "5px", paddingBottom: "5px"}}>
