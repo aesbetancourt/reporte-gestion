@@ -4,7 +4,7 @@ import 'antd/dist/antd.css';
 import './assets/css/navigation.css';
 import Reports from './Reports'
 import Selector from './Occupation'
-import Integration from './integration'
+
 
 
 
@@ -50,9 +50,7 @@ class SiderDemo extends React.Component {
             <Menu.Item key="2" icon={<FormOutlined />} onClick={() => this.setState({selected: 2})} className="customclass">
             Ocupación
             </Menu.Item>
-             <Menu.Item key="3" icon={<ApartmentOutlined />} onClick={() => this.setState({selected: 3})} className="customclass">
-                Integración
-             </Menu.Item>
+
             <Menu.Item key="4" icon={<LogoutOutlined />} className="customclass" >
                 Salir
             </Menu.Item>
@@ -75,7 +73,6 @@ class SiderDemo extends React.Component {
     >
         {this.state.selected === 1 ? <Reports /> : null}
         {this.state.selected === 2 ? <Selector/> : null}
-        {this.state.selected === 3 ? <Integration/> : null}
     </Content>
         </Layout>
         </Layout>
