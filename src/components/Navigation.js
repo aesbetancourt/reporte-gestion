@@ -4,8 +4,7 @@ import 'antd/dist/antd.css';
 import './assets/css/navigation.css';
 import Reports from './Reports'
 import Selector from './Occupation'
-
-
+import keycloak from './config/keycloak';
 
 
 // Components
@@ -34,9 +33,9 @@ class SiderDemo extends React.Component {
         collapsed: false,
         selected: 1
     };
-    // logout() {
-    //     keycloak.logout();
-    // }
+     logout() {
+         keycloak.logout();
+    }
     render() {
         return (
             <Layout>
@@ -51,7 +50,7 @@ class SiderDemo extends React.Component {
             Ocupación
             </Menu.Item>
 
-            <Menu.Item key="4" icon={<LogoutOutlined />} className="customclass" >
+            <Menu.Item key="4" icon={<LogoutOutlined />} className="customclass" onClick={()=> this.logout()} >
                 Salir
             </Menu.Item>
         </Menu>
