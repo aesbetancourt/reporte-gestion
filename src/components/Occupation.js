@@ -137,7 +137,7 @@ const Selector = () => {
         })
             .then((willDelete) => {
                 if (willDelete.value) {
-                    axiosInstance.delete('/'+record.boo_id)
+                    axiosInstance.get('/booking/delete_booking/'+record.boo_id)
                         .then( function (response) {
                             onChangeReq(req_id)
                             Swal.fire({
