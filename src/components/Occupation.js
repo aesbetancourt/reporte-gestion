@@ -306,32 +306,43 @@ const Selector = () => {
 
     // get the date
     function date1(value){
-        let  start_dateObj = new Date(value[0]._d);
-        let  start_momentObj = moment(start_dateObj);
-        req1.start_date = start_momentObj.format('YYYY-MM-DD')
-
-        let  end_dateObj = new Date(value[1]._d);
-        let  end_momentObj = moment(end_dateObj);
-        req1.end_date = end_momentObj.format('YYYY-MM-DD');
-
+        if(value != null){
+            let  start_dateObj = new Date(value[0]._d);
+            let  start_momentObj = moment(start_dateObj);
+            req1.start_date = start_momentObj.format('YYYY-MM-DD')
+            let  end_dateObj = new Date(value[1]._d);
+            let  end_momentObj = moment(end_dateObj);
+            req1.end_date = end_momentObj.format('YYYY-MM-DD');
+        }else{
+            req1.start_date = "";
+            req1.end_date = "";
+        }
     }
     function date2(value){
-        let  start_dateObj = new Date(value[0]._d);
-        let  start_momentObj = moment(start_dateObj);
-        req2.start_date = start_momentObj.format('YYYY-MM-DD')
-
-        let  end_dateObj = new Date(value[1]._d);
-        let  end_momentObj = moment(end_dateObj);
-        req2.end_date = end_momentObj.format('YYYY-MM-DD');
+        if(value != null){
+            let  start_dateObj = new Date(value[0]._d);
+            let  start_momentObj = moment(start_dateObj);
+            req2.start_date = start_momentObj.format('YYYY-MM-DD')
+            let  end_dateObj = new Date(value[1]._d);
+            let  end_momentObj = moment(end_dateObj);
+            req2.end_date = end_momentObj.format('YYYY-MM-DD');
+        }else{
+            req2.start_date = "";
+            req2.end_date = "";
+        }
     }
     function date3(value) {
-        let  start_dateObj = new Date(value[0]._d);
-        let  start_momentObj = moment(start_dateObj);
-        req3.start_date = start_momentObj.format('YYYY-MM-DD')
-
-        let  end_dateObj = new Date(value[1]._d);
-        let  end_momentObj = moment(end_dateObj);
-        req3.end_date = end_momentObj.format('YYYY-MM-DD');
+        if(value != null){
+            let  start_dateObj = new Date(value[0]._d);
+            let  start_momentObj = moment(start_dateObj);
+            req3.start_date = start_momentObj.format('YYYY-MM-DD')
+            let  end_dateObj = new Date(value[1]._d);
+            let  end_momentObj = moment(end_dateObj);
+            req3.end_date = end_momentObj.format('YYYY-MM-DD');
+        }else{
+            req3.start_date = "";
+            req3.end_date = "";
+        }
     }
 
     async function asignResources() {
