@@ -150,16 +150,16 @@ const Selector = () => {
                 inputValue: record.pert
             },
             {
-                title: 'Dia de inicio',
-                html: '<input id="date" type="date">',
+                title: 'Fecha de inicio',
+                html: '<input id="date" value="'+record.start.split('T')[0]+'" type="date">',
                 preConfirm: () => {
                     const result = document.getElementById("date").value;
                     return result;
                 }
             },
             {
-                title: 'Dia de finalizacion',
-                html: '<input id="date2" type="date">',
+                title: 'Fecha de finalizacion',
+                html: '<input id="date2"  value="'+record.end.split('T')[0]+'"  type="date">',
                 preConfirm: () => {
                     const result = document.getElementById("date2").value;
                     return result;
@@ -175,21 +175,21 @@ const Selector = () => {
                     boo_duration = null,
                     boo_start_date = result.value[2],
                     boo_end_date = result.value[3];
-                console.log({ boo_id, cli_id, req_id, usr_id, boo_duration, boo_start_date, boo_end_date, boo_percentage })
                  axiosInstance.post('/booking/booking',{
                     //  boo_duration, boo_start_date, boo_end_date, boo_percentage
                     boo_id: boo_id,
                     cli_id: cli_id,
+                    boo_duration: boo_duration,
                     req_id: req_id,
                     usr_id: usr_id,
                     boo_start_date: boo_start_date,
                     boo_end_date: boo_end_date,
                     boo_percentage: boo_percentage
                 })
-                    .then( function (response) {
+                    .then( (response) => {
                         onChangeReq(req_id)
                         Swal.fire({
-                            title:"El booking fue añadido!",
+                            title:"El booking fue editado!",
                             icon: "success",
                         })
                     });
