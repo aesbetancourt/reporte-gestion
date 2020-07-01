@@ -126,10 +126,25 @@ const Selector = () => {
         let table = []
         console.log(`selected ${value}`);
         setReqId(value)
+        // setCliId()
+        await axiosInstance.get(`/report/get_cli/${value}`)
+            .then(async function (response) {
+                setCliId(response.data[0].cli_id)
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+            .then(function () {
+
+            });
+
+
+
         await axiosInstance.get(`/report/get_req/${value}`)
             .then(async function (response) {
-                console.log(response.data)
-                setCliId(response.data[0].cli_id)
+                // console.log(response.data)
+
                 for (let i = 0; i < response.data.length; i++) {
                     console.log(response.data[i])
                     await table.push({
@@ -386,10 +401,6 @@ const Selector = () => {
 
                 });
         }
-        // await onChangeReq(req_id)
-
-        // setData(await updateTable(req_id))
-
     }
 
 
