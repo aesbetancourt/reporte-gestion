@@ -136,7 +136,7 @@ const Selector = () => {
             cancelButtonText: 'Cancelar',
 
             showCancelButton: true,
-            progressSteps: ['1', '2','3']
+            progressSteps: ['1', '2','3', '4']
         }).queue([
             {
                 title: 'Usuario',
@@ -147,26 +147,49 @@ const Selector = () => {
             },
             {
                 title: 'Porcentaje',
-                text: 'Ingrese el porcentaje de ocupacion',
+                text: 'Ingrese el porcentaje de ocupación',
                 inputValue: record.pert
             },
             {
-                title: 'Porcentaje',
-                text: 'Ingrese el porcentaje de ocupacion',
-                input: 'date',
+                title: 'Fecha de Inicio',
+                text: 'Ingrese la fecha (YYYY-MM-DD)',
+                input: 'text',
+            },
+            {
+                title: 'Fecha de Fin',
+                text: 'Ingrese la fecha (YYYY-MM-DD)',
+                input: 'text',
             }
             
         ]).then((result) => {
             if (result.value) {
+                console.log(result.value)
                 const usr_id = selectedValues[result.value[0]],
                     boo_percentage = result.value[1],
                     boo_id = record.boo_id,
                     cli_id = record.cli_id,
                     boo_duration = null,
-                    boo_start_date = "",
-                    boo_end_date = "";
+                    boo_start_date = result.value[2],
+                    boo_end_date = result.value[3];
 
                 console.log({ boo_id, cli_id, req_id, usr_id, boo_duration, boo_start_date, boo_end_date, boo_percentage })
+                axiosInstance.post('/booking/booking',{
+                    //  boo_duration, boo_start_date, boo_end_date, boo_percentage
+                    boo_id: boo_id,
+                    cli_id: cli_id,
+                    req_id: req_id,
+                    usr_id: usr_id,
+                    boo_start_date: boo_start_date,
+                    boo_end_date: boo_end_date,
+                    boo_percentage: boo_percentage
+                })
+                    .then( function (response) {
+                        onChangeReq(req_id)
+                        Swal.fire({
+                            title:"El booking fue añadido!",
+                            icon: "success",
+                        })
+                    });
             }
         });
     }
@@ -351,7 +374,6 @@ const Selector = () => {
                                     usr_id: response.data[i].usr_id,
                                     solicitud: response.data[i].req_title,
                                     resource: response.data[i].usr_name,
-                                    usr_id: response.data[i].usr_id,
                                     pert: response.data[i].boo_percentage,
                                     start: response.data[i].boo_start_date,
                                     end: response.data[i].boo_end_date
@@ -410,7 +432,6 @@ const Selector = () => {
                                     usr_id: response.data[i].usr_id,
                                     solicitud: response.data[i].req_title,
                                     resource: response.data[i].usr_name,
-                                    usr_id: response.data[i].usr_id,
                                     pert: response.data[i].boo_percentage,
                                     start: response.data[i].boo_start_date,
                                     end: response.data[i].boo_end_date
@@ -469,7 +490,6 @@ const Selector = () => {
                                     usr_id: response.data[i].usr_id,
                                     solicitud: response.data[i].req_title,
                                     resource: response.data[i].usr_name,
-                                    usr_id: response.data[i].usr_id,
                                     pert: response.data[i].boo_percentage,
                                     start: response.data[i].boo_start_date,
                                     end: response.data[i].boo_end_date
