@@ -4,8 +4,7 @@ import 'antd/dist/antd.css';
 import './assets/css/navigation.css';
 import Reports from './Reports'
 import Selector from './Occupation'
-
-
+import keycloak from '../config/keycloak';
 
 
 // Components
@@ -34,49 +33,49 @@ class SiderDemo extends React.Component {
         collapsed: false,
         selected: 1
     };
-    // logout() {
-    //     keycloak.logout();
-    // }
+    logout() {
+        keycloak.logout();
+    }
     render() {
         return (
             <Layout>
-            <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
-            <a href="/">                    <img src={require('./assets/img/logo.png')} style={{paddingTop: "20px", paddingLeft:"20px", paddingBottom:"20px"}} alt="logo" />
-            </a>
-            <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} >
-            <Menu.Item key="1" icon={<PieChartOutlined />} onClick={() => this.setState({selected: 1})} className="customclass">
-            Reporte
-            </Menu.Item>
-            <Menu.Item key="2" icon={<FormOutlined />} onClick={() => this.setState({selected: 2})} className="customclass">
-            Ocupación
-            </Menu.Item>
+                <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
+                    <a href="/">                    <img src={require('./assets/img/logo.png')} style={{paddingTop: "20px", paddingLeft:"20px", paddingBottom:"20px"}} alt="logo" />
+                    </a>
+                    <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} >
+                        <Menu.Item key="1" icon={<PieChartOutlined />} onClick={() => this.setState({selected: 1})} className="customclass">
+                            Reporte
+                        </Menu.Item>
+                        <Menu.Item key="2" icon={<FormOutlined />} onClick={() => this.setState({selected: 2})} className="customclass">
+                            Ocupación
+                        </Menu.Item>
 
-            <Menu.Item key="4" icon={<LogoutOutlined />} className="customclass" >
-                Salir
-            </Menu.Item>
-        </Menu>
-        </Sider>
-        <Layout className="site-layout">
-            <Header className="site-layout-background" style={{ padding: 0 }}>
-        {/* eslint-disable-next-line react/jsx-no-undef */}
-    <Title level={4} style={{paddingTop: "20px", paddingLeft:"20px", paddingBottom:"20px"}}>Reporte de Gestión</Title>
-        </Header>
-        <Content
-        className="site-layout-background"
-        style={{
-            margin: '24px 16px',
-                padding: 24,
-                minHeight: 280,
-                flex: 'none',
+                        <Menu.Item key="4" icon={<LogoutOutlined />} className="customclass" onClick={()=> this.logout()} >
+                            Salir
+                        </Menu.Item>
+                    </Menu>
+                </Sider>
+                <Layout className="site-layout">
+                    <Header className="site-layout-background" style={{ padding: 0 }}>
+                        {/* eslint-disable-next-line react/jsx-no-undef */}
+                        <Title level={4} style={{paddingTop: "20px", paddingLeft:"20px", paddingBottom:"20px"}}>Reporte de Gestión</Title>
+                    </Header>
+                    <Content
+                        className="site-layout-background"
+                        style={{
+                            margin: '24px 16px',
+                            padding: 24,
+                            minHeight: 280,
+                            flex: 'none',
 
-        }}
-    >
-        {this.state.selected === 1 ? <Reports /> : null}
-        {this.state.selected === 2 ? <Selector/> : null}
-    </Content>
-        </Layout>
-        </Layout>
-    );
+                        }}
+                    >
+                        {this.state.selected === 1 ? <Reports /> : null}
+                        {this.state.selected === 2 ? <Selector/> : null}
+                    </Content>
+                </Layout>
+            </Layout>
+        );
     }
 }
 

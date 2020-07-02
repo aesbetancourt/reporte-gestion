@@ -167,7 +167,7 @@ const Selector = () => {
                     return result;
                 }
             }
-            
+
         ]).then((result) => {
             if (result.value) {
                 const usr_id = selectedValues[result.value[0]],
@@ -177,7 +177,7 @@ const Selector = () => {
                     boo_duration = null,
                     boo_start_date = result.value[2],
                     boo_end_date = result.value[3];
-                 axiosInstance.post('/booking/booking',{
+                axiosInstance.post('/booking/booking',{
                     //  boo_duration, boo_start_date, boo_end_date, boo_percentage
                     boo_id: boo_id,
                     cli_id: cli_id,
@@ -397,7 +397,8 @@ const Selector = () => {
                                 });
                             }
 
-                        })
+                        }
+                        )
                         .catch(function (error) {
                             // handle error
                             // console.log(error);
@@ -455,7 +456,8 @@ const Selector = () => {
                                 });
                             }
 
-                        })
+                        }
+                        )
                         .catch(function (error) {
                             // handle error
                             // console.log(error);
@@ -513,7 +515,8 @@ const Selector = () => {
                                 });
                             }
 
-                        })
+                        }
+                            )
                         .catch(function (error) {
                             // handle error
                             // console.log(error);
@@ -526,11 +529,35 @@ const Selector = () => {
 
                 });
         }
+
+        if (!empty3 && !empty2 && !empty1) {
+            Swal.fire({
+                title: "Los recursos fueron asignados!",
+                icon: "success",
+            })
+            // eslint-disable-next-line no-mixed-operators
+        } else if ( !empty3 && !empty2 || !empty3 && !empty1 || !empty2 && !empty1 ) {
+            Swal.fire({
+                title: "Los recursos fueron asignados!",
+                icon: "success",
+            })
+            // eslint-disable-next-line no-mixed-operators
+        } else if ( !empty3 && empty2 && empty1 || empty3 && !empty2 && empty1 || empty3 && empty2 && !empty1) {
+            Swal.fire({
+                title: "El recurso fue asignado!",
+                icon: "success",
+            })
+        } else {
+            Swal.fire({
+                title: "Seleccione un recurso!",
+                icon: "warning",
+            })
+        }
+
         req1 = {usr_id: "", start_date: "", end_date: "", pert: ""}
         req2 = {usr_id: "", start_date: "", end_date: "", pert: ""}
         req3 = {usr_id: "", start_date: "", end_date: "", pert: ""}
     }
-
 
     function onBlur() {
         // console.log('blur');
@@ -715,7 +742,4 @@ const Selector = () => {
 }
 
 export default Selector
-
-
-
 
