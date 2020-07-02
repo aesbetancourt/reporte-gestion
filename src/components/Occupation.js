@@ -26,9 +26,9 @@ const axiosInstance = axios.create({
 
 
 const children = [];
-let req1 = {usr_id: "", start_date: "", end_date: "", pert: ""}
-let req2 = {usr_id: "", start_date: "", end_date: "", pert: ""}
-let req3 = {usr_id: "", start_date: "", end_date: "", pert: ""}
+let req1 = {start_date: "", end_date: ""}
+let req2 = {start_date: "", end_date: ""}
+let req3 = {start_date: "", end_date: ""}
 
 function handleChange(value) {
     // console.log(`selected ${value}`);
@@ -112,17 +112,17 @@ const Selector = () => {
     const [buttonState, setBState] = useState(false)
 
 
+    // Recurso 1
+    const [pert1, setPert1] = useState("")
+    const [select1, setSelect1] = useState("")
+    //Recurso 2
+    const [pert2, setPert2] = useState("")
+    const [select2, setSelect2] = useState("")
+    //Recurso 3
+    const [pert3, setPert3] = useState("")
+    const [select3, setSelect3] = useState("")
 
-    // async function fillData(){
-    //     let info = await getRequests()
-    //     // console.log(info)
-    //     setRequest(info)
-    //
-    // }
-    //
-    // useEffect(() => {
-    //     fillData()
-    // }, [])
+
 
     function onChange(value) {
     }
@@ -167,7 +167,7 @@ const Selector = () => {
                     return result;
                 }
             }
-            
+
         ]).then((result) => {
             if (result.value) {
                 const usr_id = selectedValues[result.value[0]],
@@ -177,7 +177,7 @@ const Selector = () => {
                     boo_duration = null,
                     boo_start_date = result.value[2],
                     boo_end_date = result.value[3];
-                 axiosInstance.post('/booking/booking',{
+                axiosInstance.post('/booking/booking',{
                     //  boo_duration, boo_start_date, boo_end_date, boo_percentage
                     boo_id: boo_id,
                     cli_id: cli_id,
@@ -278,26 +278,26 @@ const Selector = () => {
     // Get the user id
     function onChangeUser1(value){
         // console.log(req1)
-        req1.usr_id = value
+        setSelect1(value)
     }
     function onChangeUser2(value){
         // console.log(value)
-        req2.usr_id = value
+        setSelect2(value)
     }
     function onChangeUser3(value){
         // console.log(value)
-        req3.usr_id = value
+        setSelect3(value)
     }
 
     // Get the percent
     function onChangePert1(value) {
-        req1.pert = value
+        setPert1(value)
     }
     function onChangePert2(value) {
-        req2.pert = value
+        setPert2(value)
     }
     function onChangePert3(value) {
-        req3.pert = value
+        setPert3(value)
     }
 
 
@@ -309,7 +309,8 @@ const Selector = () => {
         if(value != null){
             let  start_dateObj = new Date(value[0]._d);
             let  start_momentObj = moment(start_dateObj);
-            req1.start_date = start_momentObj.format('YYYY-MM-DD')
+            req1.start_date = start_momentObj.format('YYYY-MM-DD');
+
             let  end_dateObj = new Date(value[1]._d);
             let  end_momentObj = moment(end_dateObj);
             req1.end_date = end_momentObj.format('YYYY-MM-DD');
@@ -346,11 +347,11 @@ const Selector = () => {
     }
 
     async function asignResources() {
-        // console.log(req1)
-        // console.log(req2)
-        // console.log(req3)
-        // console.log(cli_id)
-        // console.log(req_id)
+        console.log(req1)
+        console.log(req2)
+        console.log(req3)
+        console.log(cli_id)
+        console.log(req_id)
 
 
         // Create bookings 1
@@ -362,8 +363,8 @@ const Selector = () => {
         }
         if (!empty1){
             axiosInstance.put('/booking/booking', {
-                usr_id: req1.usr_id,
-                boo_percentage: req1.pert,
+                usr_id: select1,
+                boo_percentage: pert1,
                 boo_start_date: req1.start_date,
                 boo_end_date: req1.end_date,
                 req_id: req_id,
@@ -420,8 +421,8 @@ const Selector = () => {
         }
         if (!empty2){
             axiosInstance.put('/booking/booking', {
-                usr_id: req2.usr_id,
-                boo_percentage: req2.pert,
+                usr_id: select2,
+                boo_percentage: pert2,
                 boo_start_date: req2.start_date,
                 boo_end_date: req2.end_date,
                 req_id: req_id,
@@ -478,8 +479,8 @@ const Selector = () => {
         }
         if (!empty3){
             axiosInstance.put('/booking/booking', {
-                usr_id: req3.usr_id,
-                boo_percentage: req3.pert,
+                usr_id: select3,
+                boo_percentage: pert3,
                 boo_start_date: req3.start_date,
                 boo_end_date: req3.end_date,
                 req_id: req_id,
@@ -526,9 +527,21 @@ const Selector = () => {
 
                 });
         }
-        req1 = {usr_id: "", start_date: "", end_date: "", pert: ""}
-        req2 = {usr_id: "", start_date: "", end_date: "", pert: ""}
-        req3 = {usr_id: "", start_date: "", end_date: "", pert: ""}
+        req1 = {start_date: "", end_date: ""}
+        req2 = {start_date: "", end_date: ""}
+        req3 = { start_date: "", end_date: ""}
+
+
+        // Setting default values
+        setPert1("")
+        setSelect1("")
+
+        setPert2("")
+        setSelect2("")
+
+        setPert3("")
+        setSelect3("")
+
     }
 
 
@@ -618,6 +631,7 @@ const Selector = () => {
                         onFocus={onFocus}
                         onBlur={onBlur}
                         onSearch={onSearch}
+                        value={select1}
                         filterOption={(input, option) =>
                             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
@@ -628,7 +642,7 @@ const Selector = () => {
                 <Col span={4}>
                     {/*    Porcentaje*/}
                     <Text style={{paddingRight: "10px", paddingLeft: "10px"}}>%</Text>
-                    <InputNumber min={0} max={100}  onChange={onChangePert1}/>
+                    <InputNumber min={0} max={100} value={pert1} onChange={onChangePert1}/>
                 </Col>
                 <Col span={8}>
                     {/*    Fechas*/}
@@ -651,6 +665,7 @@ const Selector = () => {
                         onFocus={onFocus}
                         onBlur={onBlur}
                         onSearch={onSearch}
+                        value={select2}
                         filterOption={(input, option) =>
                             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
@@ -661,7 +676,7 @@ const Selector = () => {
                 <Col span={4}>
                     {/*    Porcentaje*/}
                     <Text style={{paddingRight: "10px", paddingLeft: "10px"}}>%</Text>
-                    <InputNumber min={0} max={100}  onChange={onChangePert2}/>
+                    <InputNumber min={0} max={100} value={pert2} onChange={onChangePert2}/>
                 </Col>
                 <Col span={8}>
                     {/*    Fechas*/}
@@ -689,6 +704,7 @@ const Selector = () => {
                         onFocus={onFocus}
                         onBlur={onBlur}
                         onSearch={onSearch}
+                        value={select3}
                         filterOption={(input, option) =>
                             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
@@ -699,7 +715,7 @@ const Selector = () => {
                 <Col span={4}>
                     {/*    Porcentaje*/}
                     <Text style={{paddingRight: "10px", paddingLeft: "10px"}}>%</Text>
-                    <InputNumber min={0} max={100}  onChange={onChangePert3}/>
+                    <InputNumber min={0} max={100} value={pert3}  onChange={onChangePert3}/>
                 </Col>
                 <Col span={8}>
                     {/*    Fechas*/}
