@@ -26,12 +26,8 @@ const axiosInstance = axios.create({
 
 
 const children = [];
-let req1 = {start_date: "", end_date: ""}
-let req2 = {start_date: "", end_date: ""}
-let req3 = {start_date: "", end_date: ""}
 
 function handleChange(value) {
-    // console.log(`selected ${value}`);
 }
 
 // Selects
@@ -39,71 +35,29 @@ let requests = [];
 let users = [], usersGlobal=[];
 axiosInstance.get('/report/get_request')
     .then(async function (response) {
-        // console.log(response.data.length)
         for (let i = 0; i < response.data.length; i++) {
             requests.push(<Option key={response.data[i].req_id}>{response.data[i].req_title}</Option>);
         }
     })
     .catch(function (error) {
-        // handle error
-        // console.log(error);
     })
     .then(function () {
-        // always executed
-        // console.log("Requests successfully fetched")
 
     });
 
 
 axiosInstance.get('/report/get_user')
     .then(async function (response) {
-        // console.log(response.data.length)
         for (let i = 0; i < response.data.length; i++) {
             usersGlobal.push([response.data[i].usr_id,response.data[i].usr_name])
             users.push(<Option key={response.data[i].usr_id}>{response.data[i].usr_name}</Option>);
         }
     })
     .catch(function (error) {
-        // handle error
-        // console.log(error);
     })
     .then(function () {
-        // always executed
-        // console.log("Users successfully fetched")
 
     });
-
-// function updateTable(req_id){
-//     let updatedTable = []
-//     axiosInstance.get(`/report/get_req/${req_id}`)
-//         .then(async function (response) {
-//             // console.log(response.data)
-//             for (let i = 0; i < response.data.length; i++) {
-//                 // console.log(response.data[i])
-//                 await updatedTable.push({
-//                     solicitud: response.data[i].req_title,
-//                     resource: response.data[i].usr_name,
-//                      usr_id: response.data[i].usr_id,
-//                     pert: response.data[i].boo_percentage,
-//                     start: response.data[i].boo_start_date,
-//                     end: response.data[i].boo_end_date
-//                 });
-//             }
-//
-//         })
-//         .catch(function (error) {
-//             // handle error
-//             // console.log(error);
-//         })
-//         .then( function () {
-//             // always executed
-//             // console.log("Table successfully fetched")
-//             // // console.log(table)
-//
-//         });
-//   return updatedTable
-// }
-
 
 const Selector = () => {
     const [data, setData] = useState([]);
@@ -115,12 +69,15 @@ const Selector = () => {
     // Recurso 1
     const [pert1, setPert1] = useState("")
     const [select1, setSelect1] = useState("")
+    const [req1,setReq1] = useState({start_date: null, end_date: null})
     //Recurso 2
     const [pert2, setPert2] = useState("")
     const [select2, setSelect2] = useState("")
+    const [req2,setReq2] = useState({start_date: null, end_date: null})
     //Recurso 3
     const [pert3, setPert3] = useState("")
     const [select3, setSelect3] = useState("")
+    const [req3,setReq3] = useState({start_date: null, end_date: null})
 
 
 
@@ -234,8 +191,6 @@ const Selector = () => {
                 setCliId(response.data[0].cli_id)
             })
             .catch(function (error) {
-                // handle error
-                // console.log(error);
             })
             .then(function () {
 
@@ -245,10 +200,8 @@ const Selector = () => {
 
         await axiosInstance.get(`/report/get_req/${value}`)
             .then(async function (response) {
-                // // console.log(response.data)
 
                 for (let i = 0; i < response.data.length; i++) {
-                    // console.log(response.data[i])
                     await table.push({
                         boo_id: response.data[i].boo_id,
                         cli_id: response.data[i].cli_id,
@@ -262,13 +215,8 @@ const Selector = () => {
                 }
             })
             .catch(function (error) {
-                // handle error
-                // console.log(error);
             })
             .then(function () {
-                // always executed
-                // console.log("Table successfully fetched")
-                // // console.log(table)
                 setData(table)
             });
 
@@ -277,15 +225,12 @@ const Selector = () => {
 
     // Get the user id
     function onChangeUser1(value){
-        // console.log(req1)
         setSelect1(value)
     }
     function onChangeUser2(value){
-        // console.log(value)
         setSelect2(value)
     }
     function onChangeUser3(value){
-        // console.log(value)
         setSelect3(value)
     }
 
@@ -309,83 +254,58 @@ const Selector = () => {
         if(value != null){
             let  start_dateObj = new Date(value[0]._d);
             let  start_momentObj = moment(start_dateObj);
-            req1.start_date = start_momentObj.format('YYYY-MM-DD');
-
             let  end_dateObj = new Date(value[1]._d);
             let  end_momentObj = moment(end_dateObj);
-            req1.end_date = end_momentObj.format('YYYY-MM-DD');
+            setReq1({start_date: start_momentObj, end_date: end_momentObj})
         }else{
-            req1.start_date = "";
-            req1.end_date = "";
+            setReq1({start_date: null, end_date: null})
         }
     }
     function date2(value){
         if(value != null){
             let  start_dateObj = new Date(value[0]._d);
             let  start_momentObj = moment(start_dateObj);
-            req2.start_date = start_momentObj.format('YYYY-MM-DD')
             let  end_dateObj = new Date(value[1]._d);
             let  end_momentObj = moment(end_dateObj);
-            req2.end_date = end_momentObj.format('YYYY-MM-DD');
+            setReq2({start_date: start_momentObj, end_date: end_momentObj})
         }else{
-            req2.start_date = "";
-            req2.end_date = "";
+            setReq2({start_date: null, end_date: null})
         }
     }
     function date3(value) {
         if(value != null){
             let  start_dateObj = new Date(value[0]._d);
             let  start_momentObj = moment(start_dateObj);
-            req3.start_date = start_momentObj.format('YYYY-MM-DD')
             let  end_dateObj = new Date(value[1]._d);
             let  end_momentObj = moment(end_dateObj);
-            req3.end_date = end_momentObj.format('YYYY-MM-DD');
+            setReq3({start_date: start_momentObj, end_date: end_momentObj})
         }else{
-            req3.start_date = "";
-            req3.end_date = "";
+            setReq3({start_date: null, end_date: null})
         }
     }
 
     async function asignResources() {
-        console.log(req1)
-        console.log(req2)
-        console.log(req3)
-        console.log(cli_id)
-        console.log(req_id)
-
 
         // Create bookings 1
-        let empty1 = false
-        for (let  key of Object.keys(req1)) {
-            if (req1[key] === ""){
-                empty1 = true
-            }
-        }
+        const empty1 = !(req1.start_date!=null && req1.end_date!=null && select1!="" && req_id!="" && cli_id!="")
         if (!empty1){
             axiosInstance.put('/booking/booking', {
                 usr_id: select1,
                 boo_percentage: pert1,
-                boo_start_date: req1.start_date,
-                boo_end_date: req1.end_date,
+                boo_start_date: req1.start_date.format('YYYY-MM-DD'),
+                boo_end_date: req1.end_date.format('YYYY-MM-DD'),
                 req_id: req_id,
                 cli_id: cli_id
             })
                 .then(response => {
-                    // console.log(response)
                 })
                 .catch(function (error) {
-                    // handle error
-                    // console.log(error);
                 })
                 .then(function () {
-                    // always executed
-                    // console.log("this way, check this out")
                     let updatedTable = []
                     axiosInstance.get(`/report/get_req/${req_id}`)
                         .then(async function (response) {
-                            console.log(response.data)
                             for (let i = 0; i < response.data.length; i++) {
-                                // console.log(response.data[i])
                                 await updatedTable.push({
                                     boo_id: response.data[i].boo_id,
                                     cli_id: response.data[i].cli_id,
@@ -400,12 +320,8 @@ const Selector = () => {
 
                         })
                         .catch(function (error) {
-                            // handle error
-                            // console.log(error);
                         })
                         .then( function () {
-                            // always executed
-                            // console.log("Table successfully fetched")
                             setData(updatedTable)
                         });
 
@@ -413,37 +329,25 @@ const Selector = () => {
         }
 
         // Create bookings 2
-        let empty2 = false
-        for (let  key of Object.keys(req2)) {
-            if (req2[key] === ""){
-                empty2 = true
-            }
-        }
+        const empty2 = !(req2.start_date!=null && req2.end_date!=null && select2!="" && req_id!="" && cli_id!="")
         if (!empty2){
             axiosInstance.put('/booking/booking', {
                 usr_id: select2,
                 boo_percentage: pert2,
-                boo_start_date: req2.start_date,
-                boo_end_date: req2.end_date,
+                boo_start_date: req2.start_date.format('YYYY-MM-DD'),
+                boo_end_date: req2.end_date.format('YYYY-MM-DD'),
                 req_id: req_id,
                 cli_id: cli_id
             })
                 .then(response => {
-                    // console.log(response)
                 })
                 .catch(function (error) {
-                    // handle error
-                    // console.log(error);
                 })
                 .then(function () {
-                    // always executed
-                    // console.log("this way, check this out")
                     let updatedTable = []
                     axiosInstance.get(`/report/get_req/${req_id}`)
                         .then(async function (response) {
-                            // console.log(response.data)
                             for (let i = 0; i < response.data.length; i++) {
-                                // console.log(response.data[i])
                                 await updatedTable.push({
                                     boo_id: response.data[i].boo_id,
                                     cli_id: response.data[i].cli_id,
@@ -458,12 +362,8 @@ const Selector = () => {
 
                         })
                         .catch(function (error) {
-                            // handle error
-                            // console.log(error);
                         })
                         .then( function () {
-                            // always executed
-                            // console.log("Table successfully fetched")
                             setData(updatedTable)
                         });
 
@@ -471,37 +371,25 @@ const Selector = () => {
         }
 
         // Create bookings 3
-        let empty3 = false
-        for (let  key of Object.keys(req3)) {
-            if (req3[key] === ""){
-                empty3 = true
-            }
-        }
+        const empty3 = !(req3.start_date!=null && req3.end_date!=null && select3!="" && req_id!="" && cli_id!="")
         if (!empty3){
             axiosInstance.put('/booking/booking', {
                 usr_id: select3,
                 boo_percentage: pert3,
-                boo_start_date: req3.start_date,
-                boo_end_date: req3.end_date,
+                boo_start_date: req3.start_date.format('YYYY-MM-DD'),
+                boo_end_date: req3.end_date.format('YYYY-MM-DD'),
                 req_id: req_id,
                 cli_id: cli_id
             })
                 .then(response => {
-                    // console.log(response)
                 })
                 .catch(function (error) {
-                    // handle error
-                    // console.log(error);
                 })
                 .then(function () {
-                    // always executed
-                    // console.log("this way, check this out")
                     let updatedTable = []
                     axiosInstance.get(`/report/get_req/${req_id}`)
                         .then(async function (response) {
-                            // console.log(response.data)
                             for (let i = 0; i < response.data.length; i++) {
-                                // console.log(response.data[i])
                                 await updatedTable.push({
                                     boo_id: response.data[i].boo_id,
                                     cli_id: response.data[i].cli_id,
@@ -516,45 +404,36 @@ const Selector = () => {
 
                         })
                         .catch(function (error) {
-                            // handle error
-                            // console.log(error);
                         })
                         .then( function () {
-                            // always executed
-                            // console.log("Table successfully fetched")
                             setData(updatedTable)
                         });
 
                 });
         }
-        req1 = {start_date: "", end_date: ""}
-        req2 = {start_date: "", end_date: ""}
-        req3 = { start_date: "", end_date: ""}
-
 
         // Setting default values
         setPert1("")
         setSelect1("")
+        setReq1({start_date: null, end_date: null})
 
         setPert2("")
         setSelect2("")
+        setReq2({start_date: null, end_date: null})
 
         setPert3("")
         setSelect3("")
-
+        setReq3({start_date: null, end_date: null})
     }
 
 
     function onBlur() {
-        // console.log('blur');
     }
 
     function onFocus() {
-        // console.log('focus');
     }
 
     function onSearch(val) {
-        // console.log('search:', val);
     }
     const columns = [
         {
@@ -649,6 +528,9 @@ const Selector = () => {
                     <Text style={{paddingRight: "10px", marginLeft: "-45px"}}>Fechas</Text>
                     <RangePicker
                         onChange={date1}
+                        format="YYYY-MM-DD"
+                        placeholder={['Fecha de inicio', 'Fecha de fin']}
+                        value={[req1.start_date, req1.end_date]}
                     />
                 </Col>
             </Row>
@@ -681,7 +563,12 @@ const Selector = () => {
                 <Col span={8}>
                     {/*    Fechas*/}
                     <Text style={{paddingRight: "10px", marginLeft: "-45px"}}>Fechas</Text>
-                    <RangePicker onChange={date2}/>
+                    <RangePicker
+                        onChange={date2}
+                        format="YYYY-MM-DD"
+                        placeholder={['Fecha de inicio', 'Fecha de fin']}
+                        value={[req2.start_date, req2.end_date]}
+                    />
                 </Col>
                 <Col span={4}>
                     {buttonState === false ?
@@ -720,7 +607,12 @@ const Selector = () => {
                 <Col span={8}>
                     {/*    Fechas*/}
                     <Text style={{paddingRight: "10px", marginLeft: "-45px"}}>Fechas</Text>
-                    <RangePicker onChange={date3}/>
+                    <RangePicker
+                        onChange={date3}
+                        format="YYYY-MM-DD"
+                        placeholder={['Fecha de inicio', 'Fecha de fin']}
+                        value={[req3.start_date, req3.end_date]}
+                    />
                 </Col>
             </Row>
 
