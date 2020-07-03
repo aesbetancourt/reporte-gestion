@@ -44,7 +44,7 @@ class SiderDemo extends React.Component {
             </a>
             <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} >
             <Menu.Item key="1" icon={<PieChartOutlined />} onClick={() => this.setState({selected: 1})} className="customclass">
-            Reporte
+            Reporte de Ocupación de Colaboradores
             </Menu.Item>
             <Menu.Item key="2" icon={<FormOutlined />} onClick={() => this.setState({selected: 2})} className="customclass">
             Ocupación

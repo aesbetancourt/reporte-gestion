@@ -132,8 +132,8 @@ const Selector = () => {
                     boo_id = record.boo_id,
                     cli_id = record.cli_id,
                     boo_duration = null,
-                    boo_start_date = result.value[2],
-                    boo_end_date = result.value[3];
+                    boo_start_date = result.value[2].format("YYYY-MM-DD"),
+                    boo_end_date = result.value[3].format("YYYY-MM-DD");
                 axiosInstance.post('/booking/booking',{
                     //  boo_duration, boo_start_date, boo_end_date, boo_percentage
                     boo_id: boo_id,
@@ -200,8 +200,12 @@ const Selector = () => {
 
         await axiosInstance.get(`/report/get_req/${value}`)
             .then(async function (response) {
-
+                let start, end, start_dateObj, end_dateObj;
                 for (let i = 0; i < response.data.length; i++) {
+                    start_dateObj = new Date(response.data[i].boo_start_date.split("T")[0]);
+                    start = moment(start_dateObj).add(1, 'day').format("DD-MM-YYYY");
+                    end_dateObj = new Date(response.data[i].boo_end_date.split("T")[0]);
+                    end = moment(end_dateObj).add(1, 'day').format("DD-MM-YYYY");
                     await table.push({
                         boo_id: response.data[i].boo_id,
                         cli_id: response.data[i].cli_id,
@@ -209,8 +213,8 @@ const Selector = () => {
                         solicitud: response.data[i].req_title,
                         resource: response.data[i].usr_name,
                         pert: response.data[i].boo_percentage,
-                        start: response.data[i].boo_start_date.split("T")[0],
-                        end: response.data[i].boo_end_date.split("T")[0]
+                        start: start,
+                        end: end
                     });
                 }
             })
@@ -292,8 +296,8 @@ const Selector = () => {
             axiosInstance.put('/booking/booking', {
                 usr_id: select1,
                 boo_percentage: pert1,
-                boo_start_date: req1.start_date.format('YYYY-MM-DD'),
-                boo_end_date: req1.end_date.format('YYYY-MM-DD'),
+                boo_start_date: req1.start_date.format("YYYY-MM-DD"),
+                boo_end_date: req1.end_date.format("YYYY-MM-DD"),
                 req_id: req_id,
                 cli_id: cli_id
             })
@@ -302,29 +306,7 @@ const Selector = () => {
                 .catch(function (error) {
                 })
                 .then(function () {
-                    let updatedTable = []
-                    axiosInstance.get(`/report/get_req/${req_id}`)
-                        .then(async function (response) {
-                            for (let i = 0; i < response.data.length; i++) {
-                                await updatedTable.push({
-                                    boo_id: response.data[i].boo_id,
-                                    cli_id: response.data[i].cli_id,
-                                    usr_id: response.data[i].usr_id,
-                                    solicitud: response.data[i].req_title,
-                                    resource: response.data[i].usr_name,
-                                    pert: response.data[i].boo_percentage,
-                                    start: response.data[i].boo_start_date.split("T")[0],
-                                    end: response.data[i].boo_end_date.split("T")[0]
-                                });
-                            }
-
-                        })
-                        .catch(function (error) {
-                        })
-                        .then( function () {
-                            setData(updatedTable)
-                        });
-
+                    onChangeReq(req_id)
                 });
         }
 
@@ -334,8 +316,8 @@ const Selector = () => {
             axiosInstance.put('/booking/booking', {
                 usr_id: select2,
                 boo_percentage: pert2,
-                boo_start_date: req2.start_date.format('YYYY-MM-DD'),
-                boo_end_date: req2.end_date.format('YYYY-MM-DD'),
+                boo_start_date: req2.start_date.format("YYYY-MM-DD"),
+                boo_end_date: req2.end_date.format("YYYY-MM-DD"),
                 req_id: req_id,
                 cli_id: cli_id
             })
@@ -344,29 +326,7 @@ const Selector = () => {
                 .catch(function (error) {
                 })
                 .then(function () {
-                    let updatedTable = []
-                    axiosInstance.get(`/report/get_req/${req_id}`)
-                        .then(async function (response) {
-                            for (let i = 0; i < response.data.length; i++) {
-                                await updatedTable.push({
-                                    boo_id: response.data[i].boo_id,
-                                    cli_id: response.data[i].cli_id,
-                                    usr_id: response.data[i].usr_id,
-                                    solicitud: response.data[i].req_title,
-                                    resource: response.data[i].usr_name,
-                                    pert: response.data[i].boo_percentage,
-                                    start: response.data[i].boo_start_date.split("T")[0],
-                                    end: response.data[i].boo_end_date.split("T")[0]
-                                });
-                            }
-
-                        })
-                        .catch(function (error) {
-                        })
-                        .then( function () {
-                            setData(updatedTable)
-                        });
-
+                    onChangeReq(req_id)
                 });
         }
 
@@ -376,8 +336,8 @@ const Selector = () => {
             axiosInstance.put('/booking/booking', {
                 usr_id: select3,
                 boo_percentage: pert3,
-                boo_start_date: req3.start_date.format('YYYY-MM-DD'),
-                boo_end_date: req3.end_date.format('YYYY-MM-DD'),
+                boo_start_date: req3.start_date.format("YYYY-MM-DD"),
+                boo_end_date: req3.end_date.format("YYYY-MM-DD"),
                 req_id: req_id,
                 cli_id: cli_id
             })
@@ -386,29 +346,7 @@ const Selector = () => {
                 .catch(function (error) {
                 })
                 .then(function () {
-                    let updatedTable = []
-                    axiosInstance.get(`/report/get_req/${req_id}`)
-                        .then(async function (response) {
-                            for (let i = 0; i < response.data.length; i++) {
-                                await updatedTable.push({
-                                    boo_id: response.data[i].boo_id,
-                                    cli_id: response.data[i].cli_id,
-                                    usr_id: response.data[i].usr_id,
-                                    solicitud: response.data[i].req_title,
-                                    resource: response.data[i].usr_name,
-                                    pert: response.data[i].boo_percentage,
-                                    start: response.data[i].boo_start_date.split("T")[0],
-                                    end: response.data[i].boo_end_date.split("T")[0]
-                                });
-                            }
-
-                        })
-                        .catch(function (error) {
-                        })
-                        .then( function () {
-                            setData(updatedTable)
-                        });
-
+                    onChangeReq(req_id)
                 });
         }
 
@@ -445,7 +383,8 @@ const Selector = () => {
             dataIndex: 'resource',
         },
         {
-            title: '%',
+            title: 'Porcentaje',
+            align: 'right',
             dataIndex: 'pert'
         },
         {
@@ -528,7 +467,7 @@ const Selector = () => {
                     <Text style={{paddingRight: "10px", marginLeft: "-45px"}}>Fechas</Text>
                     <RangePicker
                         onChange={date1}
-                        format="YYYY-MM-DD"
+                        format="DD-MM-YYYY"
                         placeholder={['Fecha de inicio', 'Fecha de fin']}
                         value={[req1.start_date, req1.end_date]}
                     />
@@ -565,7 +504,7 @@ const Selector = () => {
                     <Text style={{paddingRight: "10px", marginLeft: "-45px"}}>Fechas</Text>
                     <RangePicker
                         onChange={date2}
-                        format="YYYY-MM-DD"
+                        format="DD-MM-YYYY"
                         placeholder={['Fecha de inicio', 'Fecha de fin']}
                         value={[req2.start_date, req2.end_date]}
                     />
@@ -609,7 +548,7 @@ const Selector = () => {
                     <Text style={{paddingRight: "10px", marginLeft: "-45px"}}>Fechas</Text>
                     <RangePicker
                         onChange={date3}
-                        format="YYYY-MM-DD"
+                        format="DD-MM-YYYY"
                         placeholder={['Fecha de inicio', 'Fecha de fin']}
                         value={[req3.start_date, req3.end_date]}
                     />

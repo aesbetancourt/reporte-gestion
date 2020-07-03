@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 import { Table, Input, Button, Space } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
-
+import moment from 'moment'
 
 // import Swal from 'sweetalert2';
 
@@ -35,18 +35,28 @@ class Reports extends React.Component {
     };
   charge(){
     const data = [], obj = this;
+    let start_dateObj, start, end, end_dateObj;
 axiosInstance.get('/booking/booking')
     .then(async function (response) {
        // console.log(response.data)
         for (let i = 0; i < response.data.length; i++) {
+          if(response.data[i].boo_start_date == "--" || response.data[i].boo_end_date == "--"){
+            start = response.data[i].boo_start_date
+            end = response.data[i].boo_end_date
+          }else{
+            start_dateObj = new Date(response.data[i].boo_start_date.split("T")[0]);
+            start = moment(start_dateObj).add(1, 'day').format("DD-MM-YYYY");
+            end_dateObj = new Date(response.data[i].boo_end_date.split("T")[0]);
+            end = moment(end_dateObj).add(1, 'day').format("DD-MM-YYYY");
+          }
             data.push({
                 key: i,
                 name: response.data[i].usr_name,
                 client: response.data[i].cli_name,
                 task: response.data[i].req_title,
                 pert: response.data[i].boo_percentage,
-                start:  response.data[i].boo_start_date,
-                end: response.data[i].boo_end_date
+                start:  start,
+                end: end
             });
         }
         obj.setState({source: data})
@@ -86,7 +96,7 @@ axiosInstance.get('/booking/booking')
             Buscar
           </Button>
           <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-            Reiniciar
+            Limpiar
           </Button>
         </Space>
       </div>
@@ -147,6 +157,7 @@ axiosInstance.get('/booking/booking')
       },
       {
           title: 'Porcentaje',
+          align: 'right',
           dataIndex: 'pert',
           key: 'pert',
           ...this.getColumnSearchProps('pert',"Porcentaje"),
