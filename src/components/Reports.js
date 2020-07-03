@@ -164,11 +164,13 @@ axiosInstance.get('/booking/booking')
       },
       {
           title: 'Fecha Inicio',
+          align: 'center',
           dataIndex: 'start',
           key: 'start',
       },
       {
           title: 'Fecha Fin',
+          align: 'center',
           dataIndex: 'end',
           key: 'end',
       },

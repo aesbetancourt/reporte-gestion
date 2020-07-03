@@ -80,10 +80,12 @@ const Selector = () => {
     const [req3,setReq3] = useState({start_date: null, end_date: null})
 
 
-
-    function onChange(value) {
-    }
     function editRecord(record){
+        let start_dateObj, start, end, end_dateObj;
+        start_dateObj = new Date(record.start.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3"));
+        start = moment(start_dateObj).format("YYYY-MM-DD");
+        end_dateObj = new Date(record.end.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3"));
+        end = moment(end_dateObj).format("YYYY-MM-DD");
         let selectUsers = [], selectedValues = []
         for (let i = 0; i <  usersGlobal.length; i++) {
             selectUsers.push(usersGlobal[i][1])
@@ -110,7 +112,7 @@ const Selector = () => {
             },
             {
                 title: 'Fecha de inicio',
-                html: '<input id="date" value="'+record.start.split('T')[0]+'" type="date">',
+                html: '<input id="date" value="'+start+'" type="date">',
                 preConfirm: () => {
                     const result = document.getElementById("date").value;
                     return result;
@@ -118,7 +120,7 @@ const Selector = () => {
             },
             {
                 title: 'Fecha de finalizacion',
-                html: '<input id="date2"  value="'+record.end.split('T')[0]+'"  type="date">',
+                html: '<input id="date2"  value="'+end+'"  type="date">',
                 preConfirm: () => {
                     const result = document.getElementById("date2").value;
                     return result;
@@ -132,8 +134,8 @@ const Selector = () => {
                     boo_id = record.boo_id,
                     cli_id = record.cli_id,
                     boo_duration = null,
-                    boo_start_date = result.value[2].format("YYYY-MM-DD"),
-                    boo_end_date = result.value[3].format("YYYY-MM-DD");
+                    boo_start_date = result.value[2],
+                    boo_end_date = result.value[3];
                 axiosInstance.post('/booking/booking',{
                     //  boo_duration, boo_start_date, boo_end_date, boo_percentage
                     boo_id: boo_id,
@@ -389,10 +391,12 @@ const Selector = () => {
         },
         {
             title: 'Fecha Inicio',
+            align: 'center',
             dataIndex: 'start'
         },
         {
             title: 'Fecha Fin',
+            align: 'center',
             dataIndex: 'end'
         },
         {
