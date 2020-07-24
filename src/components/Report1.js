@@ -43,16 +43,15 @@ const axiosInstance = axios.create({
 let table = [];
 axiosInstance.get('/report/get_req_desv')
     .then(async function (response) {
-        //console.log(response.data)
         for (let i = 0; i < response.data.length; i++) {
           table.push({
             client: response.data[i].cli_name,
             title: response.data[i].req_title,
             responsable: response.data[i].responsable,
-            req_date: response.data[i].req_date.split("T")[0],
-            start: response.data[i].req_init_date.split("T")[0],
-            end: response.data[i].req_final_date.split("T")[0],
-            estimated_end: response.data[i].req_real_final_date,
+            req_date: response.data[i].req_date == null ? null : response.data[i].req_date.split("T")[0],
+            start: response.data[i].req_init_date == null ? null : response.data[i].req_init_date.split("T")[0], 
+            end: response.data[i].req_final_date == null ? null : response.data[i].req_final_date.split("T")[0], 
+            estimated_end: response.data[i].req_real_final_date == null ? null : response.data[i].req_real_final_date.split("T")[0], 
             deviation_days: response.data[i].req_day_desv,
             desv_pert: response.data[i].req_deviations_ptge
           })
@@ -61,9 +60,6 @@ axiosInstance.get('/report/get_req_desv')
     .catch(function (error) {
       console.log(error)
     })
-    .then(function () {
-      console.log("Data successfully fetched! (Report1)")
-    });
 
 
 
