@@ -1,19 +1,17 @@
-import Swal from 'sweetalert2'
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import 'antd/dist/antd.css';
-import {Button, Col, DatePicker, Divider, InputNumber, Row, Select, Space, Table, Typography} from 'antd';
-import { Tabs } from 'antd';
-import {DeleteFilled, EditFilled} from '@ant-design/icons';
-import moment from 'moment'
+import {Button, Input, Select, Space, Table, Typography} from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import Highlighter from 'react-highlight-words';
+
+// import Swal from 'sweetalert2';
+
 
 import config from '../config/config'
 import https from 'https';
-import Reports from "./Reports";
 
 const { Option } = Select;
 const { Text } = Typography;
-const { RangePicker } = DatePicker;
-const { TabPane } = Tabs;
 
 const axios = require('axios').default;
 axios.defaults.baseURL = config.backURL;
@@ -26,93 +24,161 @@ const axiosInstance = axios.create({
 
 
 
-//cli_id: 1
-//cli_name: "Mayoreo"
-//req_date: null
-//req_day_desv: null
-//req_deviations_ptge: null
-//req_final_date: "9999-12-31T00:00:00.000Z"
-//req_id: 47
-//req_init_date: "9999-12-31T00:00:00.000Z"
-//req_real_final_date: null
-//req_responsable: null
-//req_title: "Modificaciones de la página Web de Beco
-
-
-// Selects
-let table = [];
-axiosInstance.get('/report/get_req_desv')
-    .then(async function (response) {
-        for (let i = 0; i < response.data.length; i++) {
-          table.push({
-            client: response.data[i].cli_name,
-            title: response.data[i].req_title,
-            responsable: response.data[i].responsable,
-            req_date: response.data[i].req_date == null ? null : response.data[i].req_date.split("T")[0],
-            start: response.data[i].req_init_date == null ? null : response.data[i].req_init_date.split("T")[0],
-            end: response.data[i].req_final_date == null ? null : response.data[i].req_final_date.split("T")[0],
-            estimated_end: response.data[i].req_real_final_date == null ? null : response.data[i].req_real_final_date.split("T")[0],
-            deviation_days: response.data[i].req_day_desv,
-            desv_pert: response.data[i].req_deviations_ptge
-          })
-        }
-    })
-    .catch(function (error) {
-      console.log(error)
-    })
 
 
 
 
+class Report2 extends React.Component {
+    
+    constructor(props) {
+      super(props);
+      this.state = {
+        data: [],
+        requests: [],
+        searchText: '',
+        searchedColumn: '',
+        source:[]
+      };
+      this.charge = this.charge.bind(this)
+      this.charge();
+    };
+  charge(){
+      let obj = this;
+      axiosInstance.get('/report/get_req_desv')
+      .then(async function (response) {
+          obj.setState({data: response.data.map( (el,i) => {
+              return {
+                client: response.data[i].cli_name,
+                title: response.data[i].req_title,
+                responsable: response.data[i].responsable,
+                req_date: response.data[i].req_date == null ? null : response.data[i].req_date.split("T")[0],
+                start: response.data[i].req_init_date == null ? null : response.data[i].req_init_date.split("T")[0], 
+                end: response.data[i].req_final_date == null ? null : response.data[i].req_final_date.split("T")[0], 
+                estimated_end: response.data[i].req_real_final_date == null ? null : response.data[i].req_real_final_date.split("T")[0], 
+                deviation_days: response.data[i].req_day_desv,
+                desv_pert: response.data[i].req_deviations_ptge
+              }
+          })})
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }
+  getColumnSearchProps = (dataIndex, name) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={node => {
+            this.searchInput = node;
+          }}
+          placeholder={`Buscar ${name}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Buscar
+          </Button>
+          <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            Limpiar
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+    onFilter: (value, record) =>
+    record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => this.searchInput.select());
+      }
+    },
+    render: text =>
+      this.state.searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[this.state.searchText]}
+          autoEscape
+          textToHighlight={text.toString()}
+        />
+      ) : (
+        text
+      ),
+  });
 
+  handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    this.setState({
+      searchText: selectedKeys[0],
+      searchedColumn: dataIndex,
+    });
+  };
 
-const Report1 = () => {
-    const [data, setData] = useState([]);
-    useEffect(() => {
-      setData(table)
-    }, [])
+  handleReset = clearFilters => {
+    clearFilters();
+    this.setState({ searchText: '' });
+  };
+
+  render() {
     const report1 = [
         {
             title: 'Cliente',
             dataIndex: 'client',
+            ...this.getColumnSearchProps('client','Cliente'),
         },
         {
             title: 'Titulo',
             dataIndex: 'title',
+            ...this.getColumnSearchProps('title','Titulo'),
         },
         {
             title: 'Responsable',
             dataIndex: 'responsable',
+            ...this.getColumnSearchProps('responsable','Responsable'),
         },
         {
             title: 'Fecha Solicitud',
             align: 'center',
-            dataIndex: 'req_date'
+            dataIndex: 'req_date',
+            ...this.getColumnSearchProps('req_date','Fecha Solicitud'),
         },
         {
             title: 'Fecha Inicio',
             align: 'center',
-            dataIndex: 'start'
+            dataIndex: 'start',
+            ...this.getColumnSearchProps('start','Fecha Inicio'),
         },
         {
             title: 'Fecha Fin',
             align: 'center',
-            dataIndex: 'end'
+            dataIndex: 'end',
+            ...this.getColumnSearchProps('end','Fecha Fin'),
         },
         {
             title: 'Fecha Fin Estimada Real',
             align: 'center',
-            dataIndex: 'estimated_end'
+            dataIndex: 'estimated_end',
+            ...this.getColumnSearchProps('estimated_end','Fecha Fin Estimada Real'),
         },
         {
             title: 'Dias Desviación',
             align: 'right',
-            dataIndex: 'deviation_days'
+            dataIndex: 'deviation_days',
+            ...this.getColumnSearchProps('deviation_days','Dias Desviación'),
         },
         {
             title: '% Desviación',
             align: 'right',
-            dataIndex: 'desv_pert'
+            dataIndex: 'desv_pert',
+            ...this.getColumnSearchProps('desv_pert','% Desviación'),
         },
 
 
@@ -121,13 +187,14 @@ const Report1 = () => {
         <div>
         <Table
             columns={report1}
-            dataSource={data}
+            dataSource={this.state.data}
             title={() => 'Desviación real vs plan de solicitudes'}
             bordered
-            pagination={false} 
+            pagination={false}
         />
         </div>
-    )
+    );
+  }
 }
 
-export default Report1
+export default Report2;
