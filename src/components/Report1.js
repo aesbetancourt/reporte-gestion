@@ -49,9 +49,9 @@ axiosInstance.get('/report/get_req_desv')
             title: response.data[i].req_title,
             responsable: response.data[i].responsable,
             req_date: response.data[i].req_date == null ? null : response.data[i].req_date.split("T")[0],
-            start: response.data[i].req_init_date == null ? null : response.data[i].req_init_date.split("T")[0], 
-            end: response.data[i].req_final_date == null ? null : response.data[i].req_final_date.split("T")[0], 
-            estimated_end: response.data[i].req_real_final_date == null ? null : response.data[i].req_real_final_date.split("T")[0], 
+            start: response.data[i].req_init_date == null ? null : response.data[i].req_init_date.split("T")[0],
+            end: response.data[i].req_final_date == null ? null : response.data[i].req_final_date.split("T")[0],
+            estimated_end: response.data[i].req_real_final_date == null ? null : response.data[i].req_real_final_date.split("T")[0],
             deviation_days: response.data[i].req_day_desv,
             desv_pert: response.data[i].req_deviations_ptge
           })
@@ -124,6 +124,7 @@ const Report1 = () => {
             dataSource={data}
             title={() => 'Desviación real vs plan de solicitudes'}
             bordered
+            pagination={false} 
         />
         </div>
     )

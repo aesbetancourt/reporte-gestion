@@ -29,7 +29,7 @@ const axiosInstance = axios.create({
 
 
 class Report2 extends React.Component {
-    
+
     constructor(props) {
       super(props);
       this.state = {
@@ -64,8 +64,8 @@ class Report2 extends React.Component {
               request: el.req_title,
               activity: el.act_trello_name,
               responsable: el.req_responsable,
-              start: el.act_init_real_date == null ? null : el.act_init_real_date.split("T")[0], 
-              end: el.act_end_real_date == null ? null : el.act_end_real_date.split("T")[0], 
+              start: el.act_init_real_date == null ? null : el.act_init_real_date.split("T")[0],
+              end: el.act_end_real_date == null ? null : el.act_end_real_date.split("T")[0],
               estimated_end: el.act_end_date == null ? null : el.act_end_date.split("T")[0],
               deviation_days: el.act_day_desv,
               desv_pert: el.act_desv_percentage
@@ -217,6 +217,7 @@ class Report2 extends React.Component {
             title={() => 'Desviación real vs plan de actividades'}
             dataSource={this.state.data}
             bordered
+            pagination={false} 
         />
 
 
