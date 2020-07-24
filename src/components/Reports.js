@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import 'antd/dist/antd.css';
-import { Table, Input, Button, Space } from 'antd';
+import { Table, Input, Button, Space, Empty } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 import moment from 'moment'
@@ -176,7 +176,14 @@ axiosInstance.get('/booking/booking')
           key: 'end',
       },
     ];
-    return <Table columns={columns} dataSource={this.state.source} pagination={false}/>;
+    let locale = {
+      emptyText: (<Empty description={
+      <span>
+        Sin Datos
+      </span>
+    }/>),
+    };
+    return <Table locale={locale} columns={columns} dataSource={this.state.source} pagination={false}/>;
   }
 }
 

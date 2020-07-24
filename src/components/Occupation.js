@@ -2,6 +2,7 @@ import Swal from 'sweetalert2'
 import React, {useEffect, useState} from 'react';
 import 'antd/dist/antd.css';
 import {Button, Col, DatePicker, Divider, InputNumber, Row, Select, Space, Table, Typography} from 'antd';
+import { Empty } from 'antd';
 import {DeleteFilled, EditFilled} from '@ant-design/icons';
 import moment from 'moment'
 
@@ -415,6 +416,15 @@ const Selector = () => {
             ),
         },
     ];
+
+    let locale = {
+      emptyText: (<Empty description={
+      <span>
+        Seleccione una Solicitud
+      </span>
+    }/>),
+    };
+
     return (
         <div>
             <Text style={{paddingRight: "10px"}}>Selección de Solicitud</Text>
@@ -435,6 +445,7 @@ const Selector = () => {
             </Select>
             <Divider/>
             <Table
+                locale={locale}
                 columns={columns}
                 dataSource={data}
                 bordered
@@ -566,7 +577,3 @@ const Selector = () => {
 }
 
 export default Selector
-
-
-
-

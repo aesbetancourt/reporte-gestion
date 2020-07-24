@@ -1,6 +1,7 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import {Button, Input, Select, Space, Table, Typography} from 'antd';
+import { Empty } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 
@@ -192,6 +193,14 @@ class Report2 extends React.Component {
 
 
     ];
+    let locale = {
+      emptyText: (<Empty description={
+      <span>
+        Seleccione una Solicitud
+      </span>
+    }/>),
+    };
+    
     return (
         <div>
 
@@ -213,11 +222,11 @@ class Report2 extends React.Component {
         </div>
         <Table
             columns={ColReport2}
-            //  dataSource={data}
+            locale={locale}
             title={() => 'Desviación real vs plan de actividades'}
             dataSource={this.state.data}
             bordered
-            pagination={false} 
+            pagination={false}
         />
 
 

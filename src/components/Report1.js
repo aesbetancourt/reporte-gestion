@@ -1,6 +1,6 @@
 import React from 'react';
 import 'antd/dist/antd.css';
-import {Button, Input, Select, Space, Table, Typography} from 'antd';
+import {Button, Input, Select, Space, Table, Typography, Empty} from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 
@@ -29,7 +29,7 @@ const axiosInstance = axios.create({
 
 
 class Report2 extends React.Component {
-    
+
     constructor(props) {
       super(props);
       this.state = {
@@ -52,9 +52,9 @@ class Report2 extends React.Component {
                 title: response.data[i].req_title,
                 responsable: response.data[i].responsable,
                 req_date: response.data[i].req_date == null ? null : response.data[i].req_date.split("T")[0],
-                start: response.data[i].req_init_date == null ? null : response.data[i].req_init_date.split("T")[0], 
-                end: response.data[i].req_final_date == null ? null : response.data[i].req_final_date.split("T")[0], 
-                estimated_end: response.data[i].req_real_final_date == null ? null : response.data[i].req_real_final_date.split("T")[0], 
+                start: response.data[i].req_init_date == null ? null : response.data[i].req_init_date.split("T")[0],
+                end: response.data[i].req_final_date == null ? null : response.data[i].req_final_date.split("T")[0],
+                estimated_end: response.data[i].req_real_final_date == null ? null : response.data[i].req_real_final_date.split("T")[0],
                 deviation_days: response.data[i].req_day_desv,
                 desv_pert: response.data[i].req_deviations_ptge
               }
@@ -183,9 +183,18 @@ class Report2 extends React.Component {
 
 
     ];
+
+    let locale = {
+      emptyText: (<Empty description={
+      <span>
+        Sin Datos
+      </span>
+    }/>),
+    };
     return (
         <div>
         <Table
+            locale={locale}
             columns={report1}
             dataSource={this.state.data}
             title={() => 'Desviación real vs plan de solicitudes'}
