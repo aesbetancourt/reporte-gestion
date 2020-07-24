@@ -2,8 +2,12 @@ import React from 'react';
 import { Layout, Menu, Typography } from 'antd';
 import 'antd/dist/antd.css';
 import './assets/css/navigation.css';
-import Reports from './Reports'
-import Selector from './Occupation'
+import Reports from './Reports';
+import Selector from './Occupation';
+import Report1 from './Report1';
+import Report2 from './Report2';
+
+
 import keycloak from '../config/keycloak';
 
 
@@ -14,7 +18,8 @@ import {
     FormOutlined,
     PieChartOutlined,
     LogoutOutlined,
-    ApartmentOutlined
+    ApartmentOutlined,
+    BarChartOutlined
 } from '@ant-design/icons';
 // import config from "../../config/config";
 // import https from 'https';
@@ -27,6 +32,7 @@ import {
 // });
 const { Title } = Typography;
 const { Header, Sider, Content } = Layout;
+const { SubMenu } = Menu;
 
 class SiderDemo extends React.Component {
     state = {
@@ -49,7 +55,14 @@ class SiderDemo extends React.Component {
             <Menu.Item key="2" icon={<FormOutlined />} onClick={() => this.setState({selected: 2})} className="customclass">
             Ocupación
             </Menu.Item>
-
+            <SubMenu key="sub1" icon={<BarChartOutlined />} title="Reportes de Solicitudes">
+              <Menu.Item key="5" onClick={() => this.setState({selected: 3})} className="customclass">
+                Reporte 1
+              </Menu.Item>
+              <Menu.Item key="6" onClick={() => this.setState({selected: 4})} className="customclass">
+                Reporte 2
+              </Menu.Item>
+            </SubMenu>
             <Menu.Item key="4" icon={<LogoutOutlined />} className="customclass" onClick={()=> this.logout()} >
                 Salir
             </Menu.Item>
@@ -70,8 +83,10 @@ class SiderDemo extends React.Component {
 
         }}
     >
-        {this.state.selected === 1 ? <Reports /> : null}
+        {this.state.selected === 1 ? <Reports/> : null}
         {this.state.selected === 2 ? <Selector/> : null}
+        {this.state.selected === 3 ? <Report1/> : null}
+        {this.state.selected === 4 ? <Report2/> : null}
     </Content>
         </Layout>
         </Layout>
