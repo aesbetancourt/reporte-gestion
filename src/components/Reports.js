@@ -38,7 +38,7 @@ class Reports extends React.Component {
     let start_dateObj, start, end, end_dateObj;
 axiosInstance.get('/booking/booking')
     .then(async function (response) {
-      console.log(response)
+      //console.log(response)
        // console.log(response.data)
         for (let i = 0; i < response.data.length; i++) {
           if(response.data[i].boo_start_date == "--" || response.data[i].boo_end_date == "--"){

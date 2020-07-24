@@ -26,30 +26,55 @@ const axiosInstance = axios.create({
 
 
 
+//cli_id: 1
+//cli_name: "Mayoreo"
+//req_date: null
+//req_day_desv: null
+//req_deviations_ptge: null
+//req_final_date: "9999-12-31T00:00:00.000Z"
+//req_id: 47
+//req_init_date: "9999-12-31T00:00:00.000Z"
+//req_real_final_date: null
+//req_responsable: null
+//req_title: "Modificaciones de la página Web de Beco
+
 
 // Selects
-let requests = [];
-let users = [], usersGlobal=[];
-axiosInstance.get('/report/get_request')
+let table = [];
+axiosInstance.get('/report/get_req_desv')
     .then(async function (response) {
+        //console.log(response.data)
         for (let i = 0; i < response.data.length; i++) {
-            requests.push(<Option key={response.data[i].req_id}>{response.data[i].req_title}</Option>);
+          table.push({
+            client: response.data[i].cli_name,
+            title: response.data[i].req_title,
+            responsable: response.data[i].responsable,
+            req_date: response.data[i].req_date.split("T")[0],
+            start: response.data[i].req_init_date.split("T")[0],
+            end: response.data[i].req_final_date.split("T")[0],
+            estimated_end: response.data[i].req_real_final_date,
+            deviation_days: response.data[i].req_day_desv,
+            desv_pert: response.data[i].req_deviations_ptge
+          })
         }
     })
     .catch(function (error) {
+      console.log(error)
     })
     .then(function () {
-
+      console.log("Data successfully fetched! (Report1)")
     });
+
+
 
 
 
 
 const Report1 = () => {
     const [data, setData] = useState([]);
-
-  
-
+    useEffect(() => {
+      setData(table)
+    }, [])
     const report1 = [
         {
             title: 'Cliente',
@@ -96,61 +121,14 @@ const Report1 = () => {
 
 
     ];
-    const report2 = [
-        {
-            title: 'Cliente',
-            dataIndex: 'client',
-        },
-        {
-            title: 'Solicitud',
-            dataIndex: 'request',
-        },
-        {
-            title: 'Actividad',
-            dataIndex: 'activity',
-        },
-        {
-            title: 'Responsable',
-            dataIndex: 'responsable',
-        },
-
-        {
-            title: 'Fecha Inicio',
-            align: 'center',
-            dataIndex: 'start'
-        },
-        {
-            title: 'Fecha Fin',
-            align: 'center',
-            dataIndex: 'end'
-        },
-        {
-            title: 'Fecha Fin Estimada Real',
-            align: 'center',
-            dataIndex: 'estimated_end'
-        },
-        {
-            title: 'Dias Desviación',
-            align: 'right',
-            dataIndex: 'deviation_days'
-        },
-        {
-            title: '% Desviación',
-            align: 'right',
-            dataIndex: 'desv_pert'
-        },
-
-
-    ];
     return (
         <div>
         <Table
             columns={report1}
-            //  dataSource={data}
+            dataSource={data}
             title={() => 'Desviación real vs plan de solicitudes'}
             bordered
         />
-
         </div>
     )
 }
