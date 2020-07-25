@@ -3,6 +3,7 @@ import 'antd/dist/antd.css';
 import {Button, Input, Select, Space, Table, Typography, Empty} from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
+import moment from 'moment'
 
 // import Swal from 'sweetalert2';
 
@@ -11,7 +12,7 @@ import config from '../config/config'
 import https from 'https';
 
 const { Option } = Select;
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 const axios = require('axios').default;
 axios.defaults.baseURL = config.backURL;
@@ -37,7 +38,9 @@ class Report2 extends React.Component {
         requests: [],
         searchText: '',
         searchedColumn: '',
-        source:[]
+        source:[],
+        tableFontSize: 11,
+        tableHeaderSize: 12
       };
       this.charge = this.charge.bind(this)
       this.charge();
@@ -46,15 +49,28 @@ class Report2 extends React.Component {
       let obj = this;
       axiosInstance.get('/report/get_req_desv')
       .then(async function (response) {
+          //console.log(response.data)
           obj.setState({data: response.data.map( (el,i) => {
+            let req_dateObj = response.data[i].req_date === null ? new Date("0000-00-00") : new Date(response.data[i].req_date.split("T")[0]);
+            let req_date = moment(req_dateObj).format("DD-MM-YYYY");
+
+            let startObj = response.data[i].req_init_date === null ? new Date("0000-00-00") : new Date(response.data[i].req_init_date.split("T")[0]);
+            let start = moment(startObj).format("DD-MM-YYYY");
+
+            let endObj = response.data[i].req_final_date === null ? new Date("0000-00-00") : new Date(response.data[i].req_final_date.split("T")[0]);
+            let end = moment(endObj).format("DD-MM-YYYY");
+
+            let estimatedObj = response.data[i].req_real_final_date === null ? new Date("0000-00-00") : new Date(response.data[i].req_real_final_date.split("T")[0]);
+            let estimated_end = moment(estimatedObj).format("DD-MM-YYYY");
+
               return {
                 client: response.data[i].cli_name,
                 title: response.data[i].req_title,
-                responsable: response.data[i].responsable,
-                req_date: response.data[i].req_date == null ? null : response.data[i].req_date.split("T")[0],
-                start: response.data[i].req_init_date == null ? null : response.data[i].req_init_date.split("T")[0],
-                end: response.data[i].req_final_date == null ? null : response.data[i].req_final_date.split("T")[0],
-                estimated_end: response.data[i].req_real_final_date == null ? null : response.data[i].req_real_final_date.split("T")[0],
+                responsable: response.data[i].req_responsable,
+                req_date: req_date,
+                start: start,
+                end: end,
+                estimated_end: estimated_end,
                 deviation_days: response.data[i].req_day_desv,
                 desv_pert: response.data[i].req_deviations_ptge
               }
@@ -127,61 +143,118 @@ class Report2 extends React.Component {
     this.setState({ searchText: '' });
   };
 
+
+
   render() {
     const report1 = [
         {
-            title: 'Cliente',
+            title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+              Cliente
+            </Text>),
             dataIndex: 'client',
             ...this.getColumnSearchProps('client','Cliente'),
+            render: (client, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {client}
+              </Typography.Text>
+            )
         },
         {
-            title: 'Titulo',
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Título
+          </Text>),
             dataIndex: 'title',
             ...this.getColumnSearchProps('title','Titulo'),
+            render: (title, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {title}
+              </Typography.Text>)
         },
         {
-            title: 'Responsable',
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Responsable
+          </Text>),
             dataIndex: 'responsable',
             ...this.getColumnSearchProps('responsable','Responsable'),
+            render: (responsable, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {responsable}
+              </Typography.Text>)
         },
         {
-            title: 'Fecha Solicitud',
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Fecha Solicitud
+          </Text>),
             align: 'center',
             dataIndex: 'req_date',
             ...this.getColumnSearchProps('req_date','Fecha Solicitud'),
+            render: (req_date, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {req_date}
+              </Typography.Text>)
         },
         {
-            title: 'Fecha Inicio',
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Fecha Inicio
+          </Text>),
             align: 'center',
             dataIndex: 'start',
             ...this.getColumnSearchProps('start','Fecha Inicio'),
+            render: (start, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {start}
+              </Typography.Text>)
         },
         {
-            title: 'Fecha Fin',
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Fecha Fin
+          </Text>),
             align: 'center',
             dataIndex: 'end',
             ...this.getColumnSearchProps('end','Fecha Fin'),
+            render: (end, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {end}
+              </Typography.Text>)
         },
         {
-            title: 'Fecha Fin Estimada Real',
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Fecha Fin Estimada Real
+          </Text>),
             align: 'center',
             dataIndex: 'estimated_end',
             ...this.getColumnSearchProps('estimated_end','Fecha Fin Estimada Real'),
+            render: (estimated_end, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {estimated_end}
+              </Typography.Text>)
         },
         {
-            title: 'Dias Desviación',
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Dias Desviación
+          </Text>),
             align: 'right',
+            width: "5%",
             dataIndex: 'deviation_days',
             ...this.getColumnSearchProps('deviation_days','Dias Desviación'),
+            render: (deviation_days, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {deviation_days}
+              </Typography.Text>)
         },
         {
-            title: '% Desviación',
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            % Desviación
+          </Text>),
             align: 'right',
+            width: "5%",
             dataIndex: 'desv_pert',
             ...this.getColumnSearchProps('desv_pert','% Desviación'),
-        },
-
-
+            render: (desv_pert, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {desv_pert}
+              </Typography.Text>)
+        }
     ];
 
     let locale = {
@@ -198,8 +271,8 @@ class Report2 extends React.Component {
             columns={report1}
             dataSource={this.state.data}
             title={() => 'Desviación real vs plan de solicitudes'}
-            bordered
             pagination={false}
+            size="small"
         />
         </div>
     );

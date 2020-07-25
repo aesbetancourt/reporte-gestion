@@ -4,7 +4,7 @@ import {Button, Input, Select, Space, Table, Typography} from 'antd';
 import { Empty } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-
+import moment from 'moment';
 // import Swal from 'sweetalert2';
 
 
@@ -38,7 +38,9 @@ class Report2 extends React.Component {
         requests: [],
         searchText: '',
         searchedColumn: '',
-        source:[]
+        source:[],
+        tableFontSize: 11,
+        tableHeaderSize: 12
       };
       this.charge = this.charge.bind(this)
       this.onChangeReq = this.onChangeReq.bind(this)
@@ -59,15 +61,16 @@ class Report2 extends React.Component {
     let obj = this;
     axiosInstance.get('/report/get_act_desv/'+value)
   .then(async function (response) {
-    obj.setState({ data: response.data.map( (el) => {
+    console.log(response.data)
+    obj.setState({ data: response.data.map((el) => {
           return {
               client: el.cli_name,
               request: el.req_title,
               activity: el.act_trello_name,
               responsable: el.req_responsable,
-              start: el.act_init_real_date == null ? null : el.act_init_real_date.split("T")[0],
-              end: el.act_end_real_date == null ? null : el.act_end_real_date.split("T")[0],
-              estimated_end: el.act_end_date == null ? null : el.act_end_date.split("T")[0],
+              start: el.act_init_date == null ? null : el.act_init_date.split("T")[0],
+              end: el.act_end_date == null ? null : el.act_end_date.split("T")[0],
+              estimated_end: el.act_real_end_date == null ? null : el.act_real_end_date.split("T")[0],
               deviation_days: el.act_day_desv,
               desv_pert: el.act_desv_percentage
           }
@@ -140,55 +143,109 @@ class Report2 extends React.Component {
   render() {
     const ColReport2 = [
         {
-            title: 'Cliente',
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Cliente
+          </Text>),
             dataIndex: 'client',
             ...this.getColumnSearchProps('client','Cliente'),
+            render: (client, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {client}
+              </Typography.Text>)
         },
         {
-            title: 'Solicitud',
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Solicitud
+          </Text>),
             dataIndex: 'request',
             ...this.getColumnSearchProps('request','Solicitud'),
+            render: (request, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {request}
+              </Typography.Text>)
         },
         {
-            title: 'Actividad',
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Actividad
+          </Text>),
             dataIndex: 'activity',
             ...this.getColumnSearchProps('activity','Actividad'),
+            render: (activity, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {activity}
+              </Typography.Text>)
         },
         {
-            title: 'Responsable',
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Responsable
+          </Text>),
             dataIndex: 'responsable',
             ...this.getColumnSearchProps('responsable','Responsable'),
+            render: (responsable, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {responsable}
+              </Typography.Text>)
         },
 
         {
-            title: 'Fecha Inicio',
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Fecha Inicio
+          </Text>),
             align: 'center',
             dataIndex: 'start',
             ...this.getColumnSearchProps('start','Fecha Inicio'),
+            render: (start, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {start}
+              </Typography.Text>)
         },
         {
-            title: 'Fecha Fin',
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Fecha Fin
+          </Text>),
             align: 'center',
             dataIndex: 'end',
             ...this.getColumnSearchProps('end','Fecha Fin'),
+            render: (end, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {end}
+              </Typography.Text>)
         },
         {
-            title: 'Fecha Fin Estimada Real',
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Fecha Fin Estimada Real
+          </Text>),
             align: 'center',
             dataIndex: 'estimated_end',
             ...this.getColumnSearchProps('estimated_end','Fecha Fin Estimada Real'),
+            render: (estimated_end, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {estimated_end}
+              </Typography.Text>)
         },
         {
-            title: 'Dias Desviación',
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Dias Desviación
+          </Text>),
             align: 'right',
             dataIndex: 'deviation_days',
             ...this.getColumnSearchProps('deviation_days','Dias Desviación'),
+            render: (deviation_days, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {deviation_days}
+              </Typography.Text>)
         },
         {
-            title: '% Desviación',
+            title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+              % Desviación
+            </Text>),
             align: 'right',
             dataIndex: 'desv_pert',
             ...this.getColumnSearchProps('desv_pert','% Desviación'),
+            render: (desv_pert, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {desv_pert}
+              </Typography.Text>)
         },
 
 
@@ -200,7 +257,7 @@ class Report2 extends React.Component {
       </span>
     }/>),
     };
-    
+
     return (
         <div>
 
@@ -225,8 +282,8 @@ class Report2 extends React.Component {
             locale={locale}
             title={() => 'Desviación real vs plan de actividades'}
             dataSource={this.state.data}
-            bordered
             pagination={false}
+            size="small"
         />
 
 
