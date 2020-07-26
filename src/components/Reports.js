@@ -1,15 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import 'antd/dist/antd.css';
-import { Table, Input, Button, Space, Empty } from 'antd';
-import Highlighter from 'react-highlight-words';
+import {Button, Input, Select, Space, Table, Typography} from 'antd';
+import { Empty } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import moment from 'moment'
-
+import Highlighter from 'react-highlight-words';
+import moment from 'moment';
 // import Swal from 'sweetalert2';
 
 
 import config from '../config/config'
 import https from 'https';
+
+const { Option } = Select;
+const { Text } = Typography;
+
 const axios = require('axios').default;
 axios.defaults.baseURL = config.backURL;
 const axiosInstance = axios.create({
@@ -21,58 +25,64 @@ const axiosInstance = axios.create({
 
 
 
-class Reports extends React.Component {
+
+
+
+
+class Report2 extends React.Component {
 
     constructor(props) {
       super(props);
       this.state = {
+        data: [],
+        requests: [],
         searchText: '',
         searchedColumn: '',
-        source:[]
+        source:[],
+        tableFontSize: 11,
+        tableHeaderSize: 12
       };
       this.charge = this.charge.bind(this)
+      this.onChangeReq = this.onChangeReq.bind(this)
       this.charge();
     };
   charge(){
-    const data = [], obj = this;
-    let start_dateObj, start, end, end_dateObj;
-axiosInstance.get('/booking/booking')
+      let obj = this;
+    axiosInstance.get('/report/get_request')
     .then(async function (response) {
-      //console.log(response)
-       // console.log(response.data)
+        let requests2 = [];
         for (let i = 0; i < response.data.length; i++) {
-          if(response.data[i].boo_start_date == "--" || response.data[i].boo_end_date == "--"){
-            start = response.data[i].boo_start_date
-            end = response.data[i].boo_end_date
-          }else{
-            start_dateObj = new Date(response.data[i].boo_start_date.split("T")[0]);
-            start = moment(start_dateObj).add(1, 'day').format("DD-MM-YYYY");
-            end_dateObj = new Date(response.data[i].boo_end_date.split("T")[0]);
-            end = moment(end_dateObj).add(1, 'day').format("DD-MM-YYYY");
-          }
-            data.push({
-                key: i,
-                name: response.data[i].usr_name,
-                client: response.data[i].cli_name,
-                task: response.data[i].req_title,
-                pert: response.data[i].boo_percentage,
-                start:  start,
-                end: end
-            });
+            requests2.push(<Option key={response.data[i].req_id}>{response.data[i].req_title}</Option>);
         }
-        obj.setState({source: data})
+        obj.setState({ requests: requests2 })
     })
-    .catch(function (error) {
-        // handle error
-       // console.log(error);
-    })
-    .then(function () {
-        // always executed
-       // console.log("Data successfully fetched")
-
-    });
   }
-
+   onChangeReq(value) {
+    let obj = this;
+    axiosInstance.get('/report/get_act_desv/'+value)
+  .then(async function (response) {
+    let startObj, start, endObj, end, estimated_endObj, estimated_end;
+    obj.setState({ data: response.data.map((el) => {
+      startObj = el.act_init_date == null ? "Fecha invalida" : el.act_init_date.split("T")[0];
+      start = startObj == "Fecha invalida"  ? startObj : moment(startObj).format("DD-MM-YYYY");
+      endObj = el.act_end_date == null ? "Fecha invalida" : el.act_end_date.split("T")[0];
+      end = endObj == "Fecha invalida"  ? endObj : moment(endObj).format("DD-MM-YYYY");
+      estimated_endObj = el.act_real_end_date == null ? "Fecha invalida" : el.act_real_end_date.split("T")[0];
+      estimated_end = estimated_endObj == "Fecha invalida"  ? estimated_endObj : moment(estimated_endObj).format("DD-MM-YYYY");
+          return {
+              client: el.cli_name,
+              request: el.req_title,
+              activity: el.act_trello_name,
+              responsable: el.req_responsable,
+              start: start,
+              end: end,
+              estimated_end: estimated_end,
+              deviation_days: el.act_day_desv,
+              desv_pert: el.act_desv_percentage
+          }
+      }) })
+  })
+  }
   getColumnSearchProps = (dataIndex, name) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
@@ -104,7 +114,7 @@ axiosInstance.get('/booking/booking')
     ),
     filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
     onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
     onFilterDropdownVisibleChange: visible => {
       if (visible) {
         setTimeout(() => this.searchInput.select());
@@ -137,54 +147,155 @@ axiosInstance.get('/booking/booking')
   };
 
   render() {
-    const columns = [
-      {
-        title: 'Colaborador',
-        dataIndex: 'name',
-        key: 'name',
-        ...this.getColumnSearchProps('name','Colaborador'),
-      },
-      {
-        title: 'Cliente',
-        dataIndex: 'client',
-        key: 'client',
-        ...this.getColumnSearchProps('client',"Cliente"),
-      },
-      {
-        title: 'Asignación',
-        dataIndex: 'task',
-        key: 'Task',
-        ...this.getColumnSearchProps('task',"Asignación"),
-      },
-      {
-          title: 'Porcentaje',
-          align: 'right',
-          dataIndex: 'pert',
-          key: 'pert',
-          ...this.getColumnSearchProps('pert',"Porcentaje"),
-      },
-      {
-          title: 'Fecha Inicio',
-          align: 'center',
-          dataIndex: 'start',
-          key: 'start',
-      },
-      {
-          title: 'Fecha Fin',
-          align: 'center',
-          dataIndex: 'end',
-          key: 'end',
-      },
+    const ColReport2 = [
+        {
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Cliente
+          </Text>),
+            dataIndex: 'client',
+            ...this.getColumnSearchProps('client','Cliente'),
+            render: (client, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {client}
+              </Typography.Text>)
+        },
+        {
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Solicitud
+          </Text>),
+            dataIndex: 'request',
+            ...this.getColumnSearchProps('request','Solicitud'),
+            render: (request, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {request}
+              </Typography.Text>)
+        },
+        {
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Actividad
+          </Text>),
+            dataIndex: 'activity',
+            ...this.getColumnSearchProps('activity','Actividad'),
+            render: (activity, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {activity}
+              </Typography.Text>)
+        },
+        {
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Responsable
+          </Text>),
+            dataIndex: 'responsable',
+            ...this.getColumnSearchProps('responsable','Responsable'),
+            render: (responsable, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {responsable}
+              </Typography.Text>)
+        },
+
+        {
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Fecha Inicio
+          </Text>),
+            align: 'center',
+            dataIndex: 'start',
+            ...this.getColumnSearchProps('start','Fecha Inicio'),
+            render: (start, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {start}
+              </Typography.Text>)
+        },
+        {
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Fecha Fin
+          </Text>),
+            align: 'center',
+            dataIndex: 'end',
+            ...this.getColumnSearchProps('end','Fecha Fin'),
+            render: (end, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {end}
+              </Typography.Text>)
+        },
+        {
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Fecha Fin Estimada Real
+          </Text>),
+            align: 'center',
+            dataIndex: 'estimated_end',
+            ...this.getColumnSearchProps('estimated_end','Fecha Fin Estimada Real'),
+            render: (estimated_end, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {estimated_end}
+              </Typography.Text>)
+        },
+        {
+          title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+            Dias Desviación
+          </Text>),
+            align: 'right',
+            dataIndex: 'deviation_days',
+            ...this.getColumnSearchProps('deviation_days','Dias Desviación'),
+            render: (deviation_days, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {deviation_days}
+              </Typography.Text>)
+        },
+        {
+            title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
+              % Desviación
+            </Text>),
+            align: 'right',
+            dataIndex: 'desv_pert',
+            ...this.getColumnSearchProps('desv_pert','% Desviación'),
+            render: (desv_pert, record) => (
+              <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
+                {desv_pert}
+              </Typography.Text>)
+        },
+
+
     ];
     let locale = {
       emptyText: (<Empty description={
       <span>
-        Sin Datos
+        Seleccione una Solicitud
       </span>
     }/>),
     };
-    return <Table locale={locale} columns={columns} dataSource={this.state.source} pagination={false}/>;
+
+    return (
+        <div>
+
+
+        <div style={{paddingBottom: "20px"}}>
+          <Text style={{paddingRight: "10px"}}>Selección de Solicitud</Text>
+          <Select
+              showSearch
+              style={{ width: 200 }}
+              placeholder="Seleccione una solicitud"
+              optionFilterProp="children"
+              onChange={this.onChangeReq}
+              filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+          >
+              {this.state.requests}
+          </Select>
+        </div>
+        <Table
+            columns={ColReport2}
+            locale={locale}
+            title={() => 'Desviación real vs plan de actividades'}
+            dataSource={this.state.data}
+            pagination={false}
+            size="small"
+        />
+
+
+        </div>
+    );
   }
 }
 
-export default Reports;
+export default Report2;
