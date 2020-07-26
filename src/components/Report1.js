@@ -51,17 +51,17 @@ class Report2 extends React.Component {
       .then(async function (response) {
           //console.log(response.data)
           obj.setState({data: response.data.map( (el,i) => {
-            let req_dateObj = response.data[i].req_date === null ? new Date("0000-00-00") : new Date(response.data[i].req_date.split("T")[0]);
-            let req_date = moment(req_dateObj).format("DD-MM-YYYY");
+            let req_dateObj = response.data[i].req_date === null ? "Fecha invalida" : new Date(response.data[i].req_date.split("T")[0]);
+            let req_date = req_dateObj == "Fecha invalida"  ? req_dateObj : moment(req_dateObj).format("DD-MM-YYYY");
 
-            let startObj = response.data[i].req_init_date === null ? new Date("0000-00-00") : new Date(response.data[i].req_init_date.split("T")[0]);
-            let start = moment(startObj).format("DD-MM-YYYY");
+            let startObj = response.data[i].req_init_date === null ? "Fecha invalida" : new Date(response.data[i].req_init_date.split("T")[0]);
+            let start = startObj == "Fecha invalida"  ? startObj : moment(startObj).format("DD-MM-YYYY");
 
-            let endObj = response.data[i].req_final_date === null ? new Date("0000-00-00") : new Date(response.data[i].req_final_date.split("T")[0]);
-            let end = moment(endObj).format("DD-MM-YYYY");
+            let endObj = response.data[i].req_final_date === null ? "Fecha invalida" : new Date(response.data[i].req_final_date.split("T")[0]);
+            let end = endObj == "Fecha invalida"  ? endObj : moment(endObj).format("DD-MM-YYYY");
 
-            let estimatedObj = response.data[i].req_real_final_date === null ? new Date("0000-00-00") : new Date(response.data[i].req_real_final_date.split("T")[0]);
-            let estimated_end = moment(estimatedObj).format("DD-MM-YYYY");
+            let estimatedObj = response.data[i].req_real_final_date === null ? "Fecha invalida" : new Date(response.data[i].req_real_final_date.split("T")[0]);
+            let estimated_end = estimatedObj == "Fecha invalida"  ? estimatedObj : moment(estimatedObj).format("DD-MM-YYYY");
 
               return {
                 client: response.data[i].cli_name,
