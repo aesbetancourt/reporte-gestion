@@ -61,16 +61,22 @@ class Report2 extends React.Component {
     let obj = this;
     axiosInstance.get('/report/get_act_desv/'+value)
   .then(async function (response) {
-    console.log(response.data)
+    let startObj, start, endObj, end, estimated_endObj, estimated_end;
     obj.setState({ data: response.data.map((el) => {
+      startObj = el.act_init_date == null ? "Fecha invalida" : el.act_init_date.split("T")[0];
+      start = startObj == "Fecha invalida"  ? startObj : moment(startObj).format("DD-MM-YYYY");
+      endObj = el.act_end_date == null ? "Fecha invalida" : el.act_end_date.split("T")[0];
+      end = endObj == "Fecha invalida"  ? endObj : moment(endObj).format("DD-MM-YYYY");
+      estimated_endObj = el.act_real_end_date == null ? "Fecha invalida" : el.act_real_end_date.split("T")[0];
+      estimated_end = estimated_endObj == "Fecha invalida"  ? estimated_endObj : moment(estimated_endObj).format("DD-MM-YYYY");
           return {
               client: el.cli_name,
               request: el.req_title,
               activity: el.act_trello_name,
               responsable: el.req_responsable,
-              start: el.act_init_date == null ? null : el.act_init_date.split("T")[0],
-              end: el.act_end_date == null ? null : el.act_end_date.split("T")[0],
-              estimated_end: el.act_real_end_date == null ? null : el.act_real_end_date.split("T")[0],
+              start: start,
+              end: end,
+              estimated_end: estimated_end,
               deviation_days: el.act_day_desv,
               desv_pert: el.act_desv_percentage
           }
