@@ -57,10 +57,10 @@ class SiderDemo extends React.Component {
             </Menu.Item>
             <SubMenu key="sub1" icon={<BarChartOutlined />} title="Reportes de Solicitudes">
               <Menu.Item key="5" onClick={() => this.setState({selected: 3})} className="customclass">
-                Reporte 1
+                Desviación Solicitudes
               </Menu.Item>
               <Menu.Item key="6" onClick={() => this.setState({selected: 4})} className="customclass">
-                Reporte 2
+                Desviación Actividades
               </Menu.Item>
             </SubMenu>
             <Menu.Item key="4" icon={<LogoutOutlined />} className="customclass" onClick={()=> this.logout()} >
