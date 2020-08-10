@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import 'antd/dist/antd.css';
 import { Table, Input, Button, Space, Empty } from 'antd';
 import Highlighter from 'react-highlight-words';
@@ -41,7 +41,7 @@ axiosInstance.get('/booking/booking')
       //console.log(response)
        // console.log(response.data)
         for (let i = 0; i < response.data.length; i++) {
-          if(response.data[i].boo_start_date == "--" || response.data[i].boo_end_date == "--"){
+          if(response.data[i].boo_start_date === "--" || response.data[i].boo_end_date === "--"){
             start = response.data[i].boo_start_date
             end = response.data[i].boo_end_date
           }else{

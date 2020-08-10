@@ -1,5 +1,5 @@
 import Swal from 'sweetalert2'
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import 'antd/dist/antd.css';
 import {Button, Col, DatePicker, Divider, InputNumber, Row, Select, Space, Table, Typography} from 'antd';
 import { Empty } from 'antd';
@@ -8,7 +8,7 @@ import moment from 'moment'
 
 import config from '../config/config'
 import https from 'https';
-import Reports from "./Reports";
+// import Reports from "./Reports";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -26,10 +26,7 @@ const axiosInstance = axios.create({
 
 
 
-const children = [];
 
-function handleChange(value) {
-}
 
 // Selects
 let requests = [];
@@ -258,7 +255,7 @@ const Selector = () => {
 
     // get the date
     function date1(value){
-        if(value != null){
+        if(value !== null){
             let  start_dateObj = new Date(value[0]._d);
             let  start_momentObj = moment(start_dateObj);
             let  end_dateObj = new Date(value[1]._d);
@@ -269,7 +266,7 @@ const Selector = () => {
         }
     }
     function date2(value){
-        if(value != null){
+        if(value !== null){
             let  start_dateObj = new Date(value[0]._d);
             let  start_momentObj = moment(start_dateObj);
             let  end_dateObj = new Date(value[1]._d);
@@ -280,7 +277,7 @@ const Selector = () => {
         }
     }
     function date3(value) {
-        if(value != null){
+        if(value !== null){
             let  start_dateObj = new Date(value[0]._d);
             let  start_momentObj = moment(start_dateObj);
             let  end_dateObj = new Date(value[1]._d);
@@ -294,7 +291,7 @@ const Selector = () => {
     async function asignResources() {
 
         // Create bookings 1
-        const empty1 = !(req1.start_date!=null && req1.end_date!=null && select1!="" && req_id!="" && cli_id!="")
+        const empty1 = !(req1.start_date!==null && req1.end_date!==null && select1!=="" && req_id!=="" && cli_id!=="")
         if (!empty1){
             axiosInstance.put('/booking/booking', {
                 usr_id: select1,
@@ -314,7 +311,7 @@ const Selector = () => {
         }
 
         // Create bookings 2
-        const empty2 = !(req2.start_date!=null && req2.end_date!=null && select2!="" && req_id!="" && cli_id!="")
+        const empty2 = !(req2.start_date!==null && req2.end_date!==null && select2!=="" && req_id!=="" && cli_id!=="")
         if (!empty2){
             axiosInstance.put('/booking/booking', {
                 usr_id: select2,
@@ -334,7 +331,7 @@ const Selector = () => {
         }
 
         // Create bookings 3
-        const empty3 = !(req3.start_date!=null && req3.end_date!=null && select3!="" && req_id!="" && cli_id!="")
+        const empty3 = !(req3.start_date!==null && req3.end_date!==null && select3!=="" && req_id!=="" && cli_id!=="")
         if (!empty3){
             axiosInstance.put('/booking/booking', {
                 usr_id: select3,
@@ -430,7 +427,7 @@ const Selector = () => {
             <Text style={{paddingRight: "10px"}}>Selección de Solicitud</Text>
             <Select
                 showSearch
-                style={{ width: 200 }}
+                style={{ width: 900 }}
                 placeholder="Seleccione una solicitud"
                 optionFilterProp="children"
                 onChange={onChangeReq}
@@ -526,7 +523,7 @@ const Selector = () => {
                 </Col>
                 <Col span={4}>
                     {buttonState === false ?
-                        <Button type="primary" style={{ backgroundColor: "#08979c", borderColor: "#08979c" }} onClick={asignResources} disabled> Asignar recursos</Button>
+                        <Button type="primary" onClick={asignResources} disabled> Asignar recursos</Button>
                         :
                         <Button type="primary" style={{ backgroundColor: "#08979c", borderColor: "#08979c" }} onClick={asignResources}> Asignar recursos</Button>
                     }
