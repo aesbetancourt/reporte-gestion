@@ -427,7 +427,7 @@ const Selector = () => {
             <Text style={{paddingRight: "10px"}}>Selección de Solicitud</Text>
             <Select
                 showSearch
-                style={{ width: 900 }}
+                style={{ width: 940 }}
                 placeholder="Seleccione una solicitud"
                 optionFilterProp="children"
                 onChange={onChangeReq}

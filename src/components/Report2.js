@@ -291,7 +291,9 @@ class Report2 extends React.Component {
           <Input.Group compact>
           <Select
             placeholder="Seleccione un cliente"
+            showSearch
             onChange={this.onChangeCli}
+            style={{ width: 300 }}
           >
             {this.state.clients}
           </Select>
@@ -299,14 +301,14 @@ class Report2 extends React.Component {
               <Select
                 disabled
                 showSearch
-                style={{ width: 500 }}
+                style={{ width: 785 }}
                 placeholder="Seleccione una solicitud"
               >
               </Select>
              :
                <Select
                    showSearch
-                   style={{ width: 500 }}
+                   style={{ width: 785 }}
                    placeholder="Seleccione una solicitud"
                    optionFilterProp="children"
                    onChange={this.onChangeReq}
