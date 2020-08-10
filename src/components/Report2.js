@@ -5,7 +5,7 @@ import { Empty } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import moment from 'moment';
-// import Swal from 'sweetalert2';
+
 
 
 import config from '../config/config'
@@ -21,12 +21,6 @@ const axiosInstance = axios.create({
         rejectUnauthorized: false
     })
 });
-
-
-
-
-
-
 
 
 class Report2 extends React.Component {
@@ -63,12 +57,12 @@ class Report2 extends React.Component {
   .then(async function (response) {
     let startObj, start, endObj, end, estimated_endObj, estimated_end;
     obj.setState({ data: response.data.map((el) => {
-      startObj = el.act_init_date == null ? "Fecha invalida" : el.act_init_date.split("T")[0];
-      start = startObj == "Fecha invalida"  ? startObj : moment(startObj).format("DD-MM-YYYY");
-      endObj = el.act_end_date == null ? "Fecha invalida" : el.act_end_date.split("T")[0];
-      end = endObj == "Fecha invalida"  ? endObj : moment(endObj).format("DD-MM-YYYY");
-      estimated_endObj = el.act_real_end_date == null ? "Fecha invalida" : el.act_real_end_date.split("T")[0];
-      estimated_end = estimated_endObj == "Fecha invalida"  ? estimated_endObj : moment(estimated_endObj).format("DD-MM-YYYY");
+      startObj = el.act_init_date === null ? "Fecha invalida" : el.act_init_date.split("T")[0];
+      start = startObj === "Fecha invalida"  ? startObj : moment(startObj).format("DD-MM-YYYY");
+      endObj = el.act_end_date === null ? "Fecha invalida" : el.act_end_date.split("T")[0];
+      end = endObj === "Fecha invalida"  ? endObj : moment(endObj).format("DD-MM-YYYY");
+      estimated_endObj = el.act_real_end_date === null ? "Fecha invalida" : el.act_real_end_date.split("T")[0];
+      estimated_end = estimated_endObj === "Fecha invalida"  ? estimated_endObj : moment(estimated_endObj).format("DD-MM-YYYY");
           return {
               client: el.cli_name,
               request: el.req_title,
@@ -148,7 +142,7 @@ class Report2 extends React.Component {
 
   render() {
     const ColReport2 = [
-        {
+        {/*
           title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
             Cliente
           </Text>),
@@ -169,7 +163,7 @@ class Report2 extends React.Component {
               <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
                 {request}
               </Typography.Text>)
-        },
+        */},
         {
           title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
             Actividad
@@ -195,11 +189,12 @@ class Report2 extends React.Component {
 
         {
           title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
-            Fecha Inicio
+            F. Inicio
           </Text>),
             align: 'center',
             dataIndex: 'start',
-            ...this.getColumnSearchProps('start','Fecha Inicio'),
+            width: "10%",
+            ...this.getColumnSearchProps('start','F. Inicio'),
             render: (start, record) => (
               <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
                 {start}
@@ -207,11 +202,12 @@ class Report2 extends React.Component {
         },
         {
           title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
-            Fecha Fin
+            F. Fin
           </Text>),
             align: 'center',
             dataIndex: 'end',
-            ...this.getColumnSearchProps('end','Fecha Fin'),
+            width: "10%",
+            ...this.getColumnSearchProps('end','F. Fin'),
             render: (end, record) => (
               <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
                 {end}
@@ -219,10 +215,11 @@ class Report2 extends React.Component {
         },
         {
           title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
-            Fecha Fin Estimada Real
+            F. Fin Real
           </Text>),
             align: 'center',
             dataIndex: 'estimated_end',
+            width: "10%",
             ...this.getColumnSearchProps('estimated_end','Fecha Fin Estimada Real'),
             render: (estimated_end, record) => (
               <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
@@ -231,11 +228,11 @@ class Report2 extends React.Component {
         },
         {
           title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
-            Dias Desviación
+            Dias Desv
           </Text>),
             align: 'right',
             dataIndex: 'deviation_days',
-            ...this.getColumnSearchProps('deviation_days','Dias Desviación'),
+            ...this.getColumnSearchProps('deviation_days','Dias Desv'),
             render: (deviation_days, record) => (
               <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
                 {deviation_days}
@@ -243,11 +240,11 @@ class Report2 extends React.Component {
         },
         {
             title: (<Text style={{ fontSize: this.state.tableHeaderSize }}>
-              % Desviación
+              % Desv
             </Text>),
             align: 'right',
             dataIndex: 'desv_pert',
-            ...this.getColumnSearchProps('desv_pert','% Desviación'),
+            ...this.getColumnSearchProps('desv_pert','% Desv'),
             render: (desv_pert, record) => (
               <Typography.Text style={{ fontSize: this.state.tableFontSize }}>
                 {desv_pert}
@@ -272,7 +269,7 @@ class Report2 extends React.Component {
           <Text style={{paddingRight: "10px"}}>Selección de Solicitud</Text>
           <Select
               showSearch
-              style={{ width: 200 }}
+              style={{ width: 900 }}
               placeholder="Seleccione una solicitud"
               optionFilterProp="children"
               onChange={this.onChangeReq}
