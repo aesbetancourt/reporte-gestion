@@ -30,25 +30,28 @@ class Report2 extends React.Component {
       this.state = {
         data: [],
         requests: [],
+        clients: [],
         searchText: '',
         searchedColumn: '',
         source:[],
         tableFontSize: 11,
-        tableHeaderSize: 12
+        tableHeaderSize: 12,
+        selectReq: false
       };
       this.charge = this.charge.bind(this)
       this.onChangeReq = this.onChangeReq.bind(this)
+      this.onChangeCli = this.onChangeCli.bind(this)
       this.charge();
     };
   charge(){
       let obj = this;
-    axiosInstance.get('/report/get_request')
+    axiosInstance.get('/report/get_client')
     .then(async function (response) {
-        let requests2 = [];
+        let requests3 = [];
         for (let i = 0; i < response.data.length; i++) {
-            requests2.push(<Option key={response.data[i].req_id}>{response.data[i].req_title}</Option>);
+            requests3.push(<Option key={response.data[i].cli_id}>{response.data[i].cli_name}</Option>);
         }
-        obj.setState({ requests: requests2 })
+        obj.setState({ clients: requests3 })
     })
   }
    onChangeReq(value) {
@@ -76,6 +79,24 @@ class Report2 extends React.Component {
           }
       }) })
   })
+  }
+
+  onChangeCli(value){
+    let obj = this;
+    console.log(value)
+
+    axiosInstance.get('/report/get_reqbycli/'+value)
+    .then(async function (response) {
+        let requests2 = [];
+        for (let i = 0; i < response.data.length; i++) {
+            requests2.push(<Option key={response.data[i].req_id}>{response.data[i].req_title}</Option>);
+        }
+        obj.setState({ requests: requests2 })
+        obj.setState({ selectReq: true })
+
+
+    })
+
   }
   getColumnSearchProps = (dataIndex, name) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -267,18 +288,39 @@ class Report2 extends React.Component {
 
         <div style={{paddingBottom: "20px"}}>
           <Text style={{paddingRight: "10px"}}>Selección de Solicitud</Text>
+          <Input.Group compact>
           <Select
-              showSearch
-              style={{ width: 900 }}
-              placeholder="Seleccione una solicitud"
-              optionFilterProp="children"
-              onChange={this.onChangeReq}
-              filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              }
+            placeholder="Seleccione un cliente"
+            onChange={this.onChangeCli}
           >
-              {this.state.requests}
+            {this.state.clients}
           </Select>
+          {this.state.selectReq === false ?
+              <Select
+                disabled
+                showSearch
+                style={{ width: 500 }}
+                placeholder="Seleccione una solicitud"
+              >
+              </Select>
+             :
+               <Select
+                   showSearch
+                   style={{ width: 500 }}
+                   placeholder="Seleccione una solicitud"
+                   optionFilterProp="children"
+                   onChange={this.onChangeReq}
+                   filterOption={(input, option) =>
+                       option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                   }
+               >
+                   {this.state.requests}
+               </Select>
+            }
+
+
+          </Input.Group>
+
         </div>
         <Table
             columns={ColReport2}
