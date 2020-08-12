@@ -301,14 +301,14 @@ class Report2 extends React.Component {
               <Select
                 disabled
                 showSearch
-                style={{ width: 785 }}
+                style={{ width: 770 }}
                 placeholder="Seleccione una solicitud"
               >
               </Select>
              :
                <Select
                    showSearch
-                   style={{ width: 785 }}
+                   style={{ width: 770 }}
                    placeholder="Seleccione una solicitud"
                    optionFilterProp="children"
                    onChange={this.onChangeReq}
