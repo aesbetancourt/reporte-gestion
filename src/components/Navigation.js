@@ -7,8 +7,8 @@ import Selector from './Occupation';
 import Report1 from './Report1';
 import Report2 from './Report2';
 
-
-import keycloak from '../config/keycloak';
+//Keycloak disabled
+// import keycloak from '../config/keycloak';
 
 
 // Components
@@ -38,9 +38,10 @@ class SiderDemo extends React.Component {
         collapsed: false,
         selected: 1
     };
-     logout() {
-         keycloak.logout();
-    }
+    // Keycloak disabled
+    //  logout() {
+    //      keycloak.logout();
+    // }
     render() {
         return (
             <Layout>
